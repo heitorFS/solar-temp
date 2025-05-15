@@ -1,0 +1,10 @@
+include(CMakeFindDependencyMacro)
+find_dependency(OpenSSL)
+find_dependency(Threads)
+find_dependency(ZLIB)
+find_dependency(zstd CONFIG)
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libmysql-targets.cmake")
+if(NOT TARGET libmysql) # legacy vcpkg
+  add_library(libmysql INTERFACE IMPORTED)
+  set_target_properties(libmysql PROPERTIES INTERFACE_LINK_LIBRARIES unofficial::libmysql::libmysql)
+endif()

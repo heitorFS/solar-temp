@@ -1,0 +1,10 @@
+^C:\USERS\HEITO\DOCUMENTS\PROJECTS\SOLAR-TEMP\ELECTRON-QUICK-START\BUILD\CMAKEFILES\165BA33C9426846083ECC8D07EC2BBCE\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/heito/Documents/projects/solar-temp/electron-quick-start -BC:/Users/heito/Documents/projects/solar-temp/electron-quick-start/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/heito/Documents/projects/solar-temp/electron-quick-start/build/cppserver.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

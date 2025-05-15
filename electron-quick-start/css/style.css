@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'Nunito';
+    src: url('../fonts/Nunito-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat-VariableFont_wght.ttf');
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Nunito';
+    font-weight: 300;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+.page {
+    background-color: #EEE;
+}

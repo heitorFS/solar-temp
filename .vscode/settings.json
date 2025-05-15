@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "xstring": "cpp",
+        "iostream": "cpp",
+        "string": "cpp"
+    },
+    "cmake.sourceDirectory": "C:/Users/heito/Documents/projects/solar-temp/electron-quick-start",
+    "cmake.configureArgs": [
+        "-DCMAKE_TOOLCHAIN_FILE=C:\\vcpkg\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
+    ],
+    "cmake.configureOnOpen": false,
+    "cmake.configureOnEdit": false
+}
