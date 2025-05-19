@@ -2,7 +2,9 @@
     "files.associations": {
         "xstring": "cpp",
         "iostream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "regex": "cpp",
+        "xlocale": "cpp"
     },
     "cmake.sourceDirectory": "C:/Users/heito/Documents/projects/solar-temp/electron-quick-start",
     "cmake.configureArgs": [

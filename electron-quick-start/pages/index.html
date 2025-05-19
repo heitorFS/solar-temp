@@ -3,10 +3,12 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/index.css" rel="stylesheet">
     <title>Hello World!</title>
+    <script src="../js/index.js"></script>
+    <script src="../renderer.js"></script>
     <script defer src="../node_modules/@fortawesome/fontawesome-free/js/brands.js"></script>
     <script defer src="../node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
     <script defer src="../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
@@ -17,17 +19,57 @@
         A
       </div>
       <div class="sidebar">
-        <div class="sidebar-option">
+        <div class="sidebar-option" onclick="openMenu('clientes')">
           <i class="fa-solid fa-user"></i>
           <span>CLIENTES</span>
         </div>
-        <div class="sidebar-option">
+        <div class="sidebar-menu" data-id="clientes">
+          <div class="sidebar-suboption" onclick="switchScreen('meusClientes')">
+            <i class="fa-solid fa-user-group"></i>
+            <span>Meus Clientes</span>
+          </div>
+          <div class="sidebar-suboption" onclick="switchScreen('criarCliente')">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Novo Cliente</span>
+          </div>
+        </div>
+        <div class="sidebar-option" onclick="openMenu('colaboradores')">
           <i class="fa-solid fa-user-tie"></i>
           <span>COLABORADORES</span>
         </div>
-        <div class="sidebar-option">
+        <div class="sidebar-menu" data-id="colaboradores">
+          <div class="sidebar-suboption" onclick="switchScreen('meusColaboradores')">            
+            <i class="fa-solid fa-users"></i>
+            <span>Meus Colaboradores</span>
+          </div>
+          <div class="sidebar-suboption" onclick="switchScreen('novoColaborador')">
+            <i class="fa-solid fa-person-circle-plus"></i>
+            <span>Novo Colaborador</span>
+          </div>
+        </div>
+        <div class="sidebar-option" onclick="openMenu('propostas')">
           <i class="fa-solid fa-list"></i>
           <span>PROPOSTAS</span>
+        </div>
+        <div class="sidebar-menu" data-id="propostas">
+          <div class="sidebar-suboption" onclick="switchScreen('novaProposta')">
+            <i class="fa-solid fa-table-list"></i>
+            <span>Minhas propostas</span>
+          </div>
+          <div class="sidebar-suboption" onclick="switchScreen('minhasPropostas')">
+            <i class="fa-solid fa-square-plus"></i>
+            <span>Nova Proposta</span>
+          </div>
+        </div>
+        <div class="sidebar-option" onclick="openMenu('minha-conta')">
+          <i class="fa-solid fa-circle-user"></i>
+          <span>MINHA CONTA</span>
+        </div>
+        <div class="sidebar-menu" data-id="minha-conta">
+          <div class="sidebar-suboption" onclick="switchScreen('configuracoes')">
+            <i class="fa-solid fa-gear"></i>
+            <span>Configurações</span>
+          </div>
         </div>
       </div>
       <div class="page">

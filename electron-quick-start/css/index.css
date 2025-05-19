@@ -13,22 +13,57 @@
 }
 
 .sidebar {
-    
+    user-select: none;
 }
 
 .sidebar-option {
     width: 100%;
-    font-size: 14pt;
+    font-size: 13pt;
     font-family: 'Montserrat';
-    font-weight: 500;
-    padding: 20px 40px;
+    font-weight: 600;
+    padding: 25px 40px;
+    padding-right: 0;
     color: #2A4759;
     border-bottom: 1px solid #DDD;
+    transition: 200ms;
 }
 
 .sidebar-option > svg {
     margin-right: 10px;
-    font-size: 16pt;
+    font-size: 15pt;
+}
+
+.sidebar-menu {    
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+}
+
+.sidebar-suboption {
+    width: 100%;
+    font-weight: 500;
+    padding: 15px 60px;
+    padding-right: 0;
+    font-size: 12pt;
+    color: #66899e;
+    transition: 200ms;
+}
+
+.sidebar-suboption > svg {
+    margin-right: 10px;
+    font-size: 14pt;
+}
+
+.sidebar-open {
+    border-bottom: 1px solid #DDD;
+    max-height: 500px;
+    transition: max-height 1s ease-in-out;
+}
+
+.sidebar-option:hover, .sidebar-suboption:hover {
+    cursor: pointer;
+    background-color: #DDD;
+    transition: 200ms;
 }
 
 .page {

@@ -1,4 +1,4 @@
-const { add, getAllClientes } = require('./build/Release/cppserver.node');
+const { add } = require('./build/Release/cppserver.node');
 
-var result = getAllClientes(); 
+let result = add(1, 2);
 postMessage(result);
