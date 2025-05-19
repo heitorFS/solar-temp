@@ -15,23 +15,6 @@ namespace server {
     
     // CLASSES
 
-    enum Cargos
-    {
-        VENDEDOR,
-        PROJETISTA,
-        INSTALADOR,
-        FINANCEIRO,
-        ADMINISTRATIVO
-    };
-
-    class Colaborador
-    {
-        public:
-            int id;
-            string nome;
-            //u_int id_cargo
-    };
-
     // METHODS
 
     int add (int x, int y);

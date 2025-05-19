@@ -6,12 +6,11 @@
  * to expose Node.js functionality from the main process.
  */
 
+console.log('as');
 var worker = new Worker('./worker.js');
 worker.onmessage = function(event) { 
-   
    //print result on console and h1 tag
    console.log("worker : ", event.data);
-   document.querySelector('h1').innerHTML = "native addon add function(3, 4): " + event.data;
    //terminate webworker
    worker.terminate();
    
