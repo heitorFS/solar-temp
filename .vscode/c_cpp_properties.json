@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Program Files/MySQL/MySQL Server 8.0/include"
+                "C:/libraries/mysql",
+                "C:/libraries",
+                "${workspaceFolder}/electron-quick-start/build/vcpkg_installed/x64-windows/include"
             ],
             "defines": [
                 "_DEBUG",
