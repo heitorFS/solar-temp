@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:/libraries/mysql",
-                "C:/libraries"
+                "C:/libraries",
+                "${workspaceFolder}/electron-quick-start/build/vcpkg_installed/x64-windows/include"
             ],
             "defines": [
                 "_DEBUG",

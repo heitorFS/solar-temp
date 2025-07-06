@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('node:path')
+const { app, BrowserWindow, ipcMain } = require('electron');
+app.commandLine.appendSwitch('--enable-logging', 'logs.txt')
+const path = require('node:path');
 
 function createWindow () {
   // Create the browser window.
@@ -9,23 +10,30 @@ function createWindow () {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'), 
-      nodeIntegration: true,
+      // nodeIntegration: true,
       nodeIntegrationInWorker: true
     }
-  })
+  });
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./pages/index.html')
+  mainWindow.loadFile('./index.html');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
+  return mainWindow;
+}
+
+function handleSetTitle (event, title) {
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents);
+  win.setTitle(title);
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  let window = createWindow()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -39,7 +47,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
-})
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

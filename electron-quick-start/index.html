@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/index.css" rel="stylesheet">
+    <meta charset="UTF-8" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/index.css" rel="stylesheet">
+    <link href="./css/colaboradores.css" rel="stylesheet">
+    <link href="./css/configuracoes.css" rel="stylesheet">
     <title>Hello World!</title>
-    <script src="../js/index.js"></script>
-    <script src="../renderer.js"></script>
-    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/brands.js"></script>
-    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
-    <script defer src="../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/jquery.mask.min.js"></script>
+    <script defer src="./node_modules/@fortawesome/fontawesome-free/js/brands.js"></script>
+    <script defer src="./node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
+    <script defer src="./node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        A
+        <span onclick="switchScreen('home')">A</span>
       </div>
       <div class="sidebar">
         <div class="sidebar-option" onclick="openMenu('clientes')">
@@ -42,7 +43,7 @@
             <i class="fa-solid fa-users"></i>
             <span>Meus Colaboradores</span>
           </div>
-          <div class="sidebar-suboption" onclick="switchScreen('novoColaborador')">
+          <div class="sidebar-suboption" onclick="switchScreen('criarColaborador')">
             <i class="fa-solid fa-person-circle-plus"></i>
             <span>Novo Colaborador</span>
           </div>
@@ -52,7 +53,7 @@
           <span>PROPOSTAS</span>
         </div>
         <div class="sidebar-menu" data-id="propostas">
-          <div class="sidebar-suboption" onclick="switchScreen('novaProposta')">
+          <div class="sidebar-suboption" onclick="switchScreen('criarProposta')">
             <i class="fa-solid fa-table-list"></i>
             <span>Minhas propostas</span>
           </div>
@@ -73,8 +74,24 @@
         </div>
       </div>
       <div class="page">
-        <iframe src="./home.html">
+        
+      </div>
+      <div class="popups">
+        
+      </div>
+      <div class="modal-container">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">Template modal title</div>
+            <div class="modal-close"><i class="fa-solid fa-x" onclick="closeModal()"></i></div>
+          </div>
+          <div class="modal-content">
+            
+          </div>
+        </div>
       </div>
     </div>
   </body>
+  <script src="./renderer.js"></script>
+  <script src="./js/index.js"></script>
 </html>

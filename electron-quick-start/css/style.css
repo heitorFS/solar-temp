@@ -15,10 +15,207 @@ html, body {
     font-weight: 300;
 }
 
-div {
+div, input, select {
     box-sizing: border-box;
 }
 
 .page {
     background-color: #EEE;
+}
+
+.col-1fr-1fr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+}
+
+.col-1fr-200px {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+}
+
+.table-container {
+    margin: 20px;
+}
+
+.table-header {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: #F3C623 !important;
+    color: #000;
+    font-weight: 500;
+}
+
+.col-5-1fr {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 60px;
+}
+
+.col-1-1fr {
+    grid-template-columns: 1fr 60px;
+}
+
+.table-row {
+    display: grid;
+    padding: 15px;
+    background-color: #FFF;
+    font-weight: 300;
+}
+
+.table-row:nth-of-type(odd) {
+    background-color: #F5F5F5;
+}
+
+.center {
+    justify-self: center;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    transition: 200ms;
+}
+
+.table-action:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    filter: brightness(0.8);
+    transition: 200ms;
+}
+
+.delete {
+    width: 30px;
+    height: 30px;
+    color: #FFF;
+    background-color: rgb(160, 68, 68);
+}
+
+.add {
+    width: 30px;
+    height: 30px;
+    color: #FFF;
+    background-color: rgb(68, 160, 76);
+}
+
+.form-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    width: 80%;
+    background-color: #FFF;
+    padding: 50px 30px;
+    border-radius: 10px;
+}
+
+.field {
+    width: 100%;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.field label {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    padding: 0 5px;
+    background-color: #FFF;
+}
+
+.field input, .field select {
+    font-family: 'Nunito';
+    padding: 20px;
+    width: 100%;
+    border: 1px solid #000;
+    border-radius: 7px;
+    font-size: 14pt;
+    font-weight: 300;
+}
+
+.switch-container {
+    height: calc(100% - 30px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 62px;
+    height: 35px;
+    margin: 0 10px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 1;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    background: #fff;
+    transition: .4s;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1.9em;
+    width: 1.9em;
+    border-radius: 16px;
+    left: 1.2px;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px #999;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #F3C623;
+    border: 1px solid transparent;
+}
+
+input:checked + .slider:before {
+    transform: translateX(1.5em);  
+}
+
+.submit {
+    width: 100%;
+    background-color: #F3C623;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    color: #FFF;
+    font-size: 15pt;
+    font-weight: 600;
+    transition: 200ms;
+}
+
+.submit:hover {
+    cursor: pointer;
+    background-color: #ceaa29;
+    transition: 200ms;
 }

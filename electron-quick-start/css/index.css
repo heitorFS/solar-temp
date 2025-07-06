@@ -23,7 +23,7 @@
     font-weight: 600;
     padding: 25px 40px;
     padding-right: 0;
-    color: #2A4759;
+    color: #10375C;
     border-bottom: 1px solid #DDD;
     transition: 200ms;
 }
@@ -45,7 +45,7 @@
     padding: 15px 60px;
     padding-right: 0;
     font-size: 12pt;
-    color: #66899e;
+    color: #4b738b;
     transition: 200ms;
 }
 
@@ -72,8 +72,109 @@
     overflow: hidden;
 }
 
-iframe {
-    border: none;
+.popups {
+    position: absolute;
+    top: 85px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+.popup {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 45px;
+    border-radius: 8px;
+    max-width: 450px;
+    margin-bottom: 10px;
+    opacity: 0;
+
+    animation-name: popup-fade;
+    animation-duration: 5000ms;
+    animation-iteration-count: 1;
+}
+
+@keyframes popup-fade {
+    0%   {opacity: 1;}
+    50%  {opacity: 1;}
+    100% {opacity: 0;}    
+}
+
+.popup-close {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    color: #888;
+    font-size: 13px;
+    transition: 200ms;
+}
+
+.popup-close:hover {
+    cursor: pointer;
+    transform: scale(1.08);
+    transition: 200ms;
+}
+
+.popup-text {    
+    padding: 15px;
+    padding-left: 25px;
+}
+
+.popup-feedback {
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #FFF;
+}
+
+.popup-error {
+    background: linear-gradient(270deg, rgb(182, 59, 59) 45px, rgb(255, 255, 255) 45px);
+}
+
+.popup-info {    
+    background: linear-gradient(270deg, rgb(110, 110, 110) 45px, rgb(255, 255, 255) 45px);
+}
+
+.popup-success {    
+    background: linear-gradient(270deg, rgb(36, 175, 82) 45px, rgb(255, 255, 255) 45px);
+}
+
+.modal-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    width: 60%;
+    background-color: #FFF;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.modal-header {
+    padding: 10px;
+    border-bottom: solid 1px #888;
+    color: #888;
+    display: grid;
+    grid-template-columns: 1fr 12px;
+    font-size: 14pt;
+    font-weight: 400;
+    transition: 200ms;
+}
+
+.modal-close:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 200ms;
 }

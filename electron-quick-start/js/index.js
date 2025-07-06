@@ -10,6 +10,14 @@ function openMenu(id) {
 }
 
 function switchScreen(id) {
-    let iframe = document.querySelector('iframe');
-    iframe.src = `../pages/${id}.html`;
+    $('.page').load(`pages/${id}.html`);
 }
+
+function closeModal() {
+    alterObj = null;
+    $('.modal-container').css('display', 'none');
+}
+
+$('document').ready(function () {
+    switchScreen('configuracoes');
+});
