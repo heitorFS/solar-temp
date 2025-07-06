@@ -77,7 +77,7 @@ namespace server {
         string cpf_cnpj;
         string telefone;
         string cep;
-        long numero;
+        int64_t numero;
         string complemento;
         int origem;
         string data_origem;
@@ -89,11 +89,11 @@ namespace server {
         double extra_renda;
         string observacoes;
 
-        cliente(int _id, string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, long _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
+        cliente(int _id, string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, int64_t _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
         : id(_id), nome(_nome), email(_email), proprietario(_propietario), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), numero(_numero), complemento(_complemento), origem(_origem), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
         {}
 
-        cliente(string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, long _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
+        cliente(string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, int64_t _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
         : nome(_nome), email(_email), proprietario(_propietario), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), numero(_numero), complemento(_complemento), origem(_origem), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
         {}
 
