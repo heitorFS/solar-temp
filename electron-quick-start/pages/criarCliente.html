@@ -1,1 +1,104 @@
-bbbbbbbbbbb
+<div class="form-container">
+    <form class="form">
+        <input id="id" value="0" hidden />
+        <div class="field">
+            <label>Nome</label>
+            <input id="nome" type="text" required />
+        </div>
+        <div class="col-1fr-1fr">
+            <div class="field">
+                <label>Telefone</label>
+                <input id="telefone" type="text" required />
+            </div>
+            <div class="field">
+                <label>E-mail</label>
+                <input id="email" type="email" required />
+            </div>
+        </div>
+        <div class="field">
+            <label>Proprietario</label>
+            <select id="proprietario" required></select>
+        </div>
+        <div class="col-1fr-200px">
+            <div class="field">
+                <label class="cpfcnpj-label">CPF</label>
+                <input id="cpf_cnpj" type="text" required />
+            </div>
+            <div class="switch-container">
+                <span>CPF</span>
+                <label class="switch">
+                    <input class="cpfcnpj-switch" type="checkbox">
+                    <span class="slider"></span>
+                </label>                
+                <span>CNPJ</span>
+            </div>
+        </div>
+        <div class="col-200px-1fr">
+            <div class="field">
+                <label>CEP</label>
+                <input id="cep" type="text" required />
+            </div>
+            <div class="field">
+                <label>Endereço</label>
+                <input id="endereco" type="text" readonly />
+            </div>
+        </div>
+        <div class="col-200px-1fr">
+            <div class="field">
+                <label>Número</label>
+                <input id="numero" type="number" required />
+            </div>
+            <div class="field">
+                <label>Complemento</label>
+                <input id="complemento" type="text" />
+            </div>
+        </div>
+        <div class="col-1fr-1fr">
+            <div class="field">
+                <label>Origem do cliente</label>
+                <select id="origem" required></select>
+            </div>
+            <div class="field">
+                <label class="data-label">Data de nascimento</label>
+                <input id="data_origem" type="date" />
+            </div>
+        </div>
+        <div id="extra_properties" class="col-1fr-1fr" style="display: none;">
+            <div class="field">
+                <label>Nome do responsável</label>
+                <input id="extra_nome" type="text" />
+            </div>
+            <div class="field">
+                <label>CPF do responsável</label>
+                <input id="extra_cpf" type="text" />
+            </div>
+        </div>
+        <div class="col-1fr-1fr">
+            <div class="field">
+                <label class="extra_rg-label">RG</label>
+                <input id="extra_rg" type="text" />
+            </div>
+            <div class="field">
+                <label class="extra_nacionalidade-label">Nacionalidade</label>
+                <input id="extra_nacionalidade" type="text" />
+            </div>
+        </div>
+        <div class="col-1fr-1fr">
+            <div class="field">
+                <label class="extra_profissao-label">Profissão</label>
+                <input id="extra_profissao" type="text" />
+            </div>
+            <div class="field">
+                <label class="extra_renda-label">Renda Mensal</label>
+                <input id="extra_renda" type="text" value="0,00" required />
+            </div>
+        </div>
+        <div class="field">
+            <label>Observações</label>
+            <textarea id="observacoes"></textarea>
+        </div>
+        <button class="submit secondary-submit" type="submit">Salvar Cliente</button>
+        <button class="submit" type="submit">Salvar Cliente e Gerar Proposta</button>
+    </form>
+</div>
+<script src="js/novoCliente.js"></script>

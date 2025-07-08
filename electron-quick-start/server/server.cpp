@@ -64,11 +64,11 @@ void create(Args... args)
     sqlite3_open("C:/AEnAzume/database.db", &db); 
     string query = fmt::format("INSERT INTO {} ({}) VALUES({});", T::get_table(), T::get_fields(), T::get_template());
 
-    const char* sql = 
+    string sql = 
         fmt::format(query,
-            forward<Args>(args)...).c_str();
+            forward<Args>(args)...);
 
-    sqlite3_exec(db, sql, server::close_connection, db, NULL);
+    sqlite3_exec(db, sql.c_str(), server::close_connection, db, NULL);
 }
 
 template <typename T>
@@ -79,10 +79,10 @@ string read()
 
     auto q_array = json::array();
     sqlite3_stmt* stmt;
-    const char* sql = 
-        fmt::format("SELECT * FROM {}", T::get_table()).c_str();
+    string sql = 
+        fmt::format("SELECT * FROM {}", T::get_table());
 
-    int step = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+    int step = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
     while ((step = sqlite3_step(stmt)) == SQLITE_ROW)
     {
         q_array.push_back(T(stmt));
@@ -113,12 +113,12 @@ void remove(size_t id)
     sqlite3* db;
     int err = sqlite3_open("C:/AEnAzume/database.db", &db);
 
-    const char* sql = 
+    string sql = 
         fmt::format("DELETE FROM {} WHERE id = {};",
             T::get_table(),
-            id).c_str();
+            id);
 
-    err = sqlite3_exec(db, sql, server::close_connection, db, NULL);
+    err = sqlite3_exec(db, sql.c_str(), server::close_connection, db, NULL);
 }
 
 #pragma endregion CRUD operations
@@ -133,8 +133,7 @@ bool validate_letters(string& txt)
         if (
             (txt[i] < 65 ||
             (txt[i] > 90 && txt[i] < 97) ||
-            (txt[i] > 122 && txt[i] < 192) ||
-            txt[i] > 255) && txt[i] != 32 && txt[i] != 39 && txt[i] != 45
+            (txt[i] > 122 && txt[i] < 192)) && txt[i] != 32 && txt[i] != 39 && txt[i] != 45 && txt[i] != -61 && txt[i - 1] != -61
         )
             return false;
     }
@@ -234,6 +233,7 @@ bool server::setupDatabase()
         "cpf_cnpj VARCHAR(14) NOT NULL,"
         "telefone VARCHAR(11) NOT NULL,"
         "cep CHAR(8) NOT NULL,"
+        "endereco VARCHAR(254) NOT NULL,"
         "numero INTEGER NOT NULL,"
         "complemento VARCHAR(120),"
         "origem INTEGER NOT NULL,"
@@ -297,7 +297,7 @@ Napi::Boolean server::createClienteWrapped(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
 
-    if (info.Length() < 17 || !info[0].IsString() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString() || !info[5].IsString() || !info[6].IsNumber() || !info[7].IsString() || !info[8].IsNumber() || !info[9].IsString() ||  !info[10].IsString() || !info[11].IsString() || !info[12].IsString() || !info[13].IsString() || !info[14].IsString() || !info[15].IsNumber() || !info[16].IsString())
+    if (info.Length() < 18 || !info[0].IsString() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString() || !info[5].IsString() || !info[6].IsString() || !info[7].IsNumber() || !info[8].IsString() || !info[9].IsNumber() || !info[10].IsString() ||  !info[11].IsString() || !info[12].IsString() || !info[13].IsString() || !info[14].IsString() || !info[15].IsString() || !info[16].IsNumber() || !info[17].IsString())
         Napi::TypeError::New(env, "nome::String, email::String, proprietario::Number, cpf_cnpj::String, telefone::String, cep::String, numero::Number, complemento::String, origem::Number, data_origem::String, extra_nome::String, extra_cpf::String, extra_rg::String, extra_nacionalidade::String, extra_profissao::String, extra_renda::Number, observacoes::String expected")
             .ThrowAsJavaScriptException();
 
@@ -308,17 +308,18 @@ Napi::Boolean server::createClienteWrapped(const Napi::CallbackInfo& info)
         remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[5].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[6].As<Napi::Number>().Int32Value(),
-        remove_single_quotes(info[7].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[8].As<Napi::Number>().Int32Value(),
-        remove_single_quotes(info[9].As<Napi::String>().Utf8Value(), DUPLICATE),
+        remove_single_quotes(info[6].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[7].As<Napi::Number>().Int64Value(),
+        remove_single_quotes(info[8].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[9].As<Napi::Number>().Int32Value(),
         remove_single_quotes(info[10].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[11].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[12].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[13].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[14].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[15].As<Napi::Number>().Int32Value(),
-        remove_single_quotes(info[16].As<Napi::String>().Utf8Value(), DUPLICATE)
+        remove_single_quotes(info[15].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[16].As<Napi::Number>().DoubleValue(),
+        remove_single_quotes(info[17].As<Napi::String>().Utf8Value(), DUPLICATE)
     ); 
 
     json errs = json::array({});
@@ -328,7 +329,7 @@ Napi::Boolean server::createClienteWrapped(const Napi::CallbackInfo& info)
     if (!validate_numbers(_cliente.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
     if (!validate_numbers(_cliente.cep)) errs.push_back(field_error("cep", field_error_code::INVALID_FIELD));
     if (!date::validate_date(_cliente.data_origem)) errs.push_back(field_error("data_origem", field_error_code::INVALID_FIELD));
-    if (!validate_letters(_cliente.nome)) errs.push_back(field_error("extra_nome", field_error_code::INVALID_FIELD));
+    if (!validate_letters(_cliente.extra_nome)) errs.push_back(field_error("extra_nome", field_error_code::INVALID_FIELD));
     if (_cliente.extra_cpf.length() > 0 && (!validate_numbers(_cliente.extra_cpf) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.extra_cpf.c_str()))) errs.push_back(field_error("extra_cpf", field_error_code::INVALID_FIELD));
     if (!validate_numbers(_cliente.extra_rg)) errs.push_back(field_error("extra_rg", field_error_code::INVALID_FIELD));
     if (!validate_letters(_cliente.extra_nacionalidade)) errs.push_back(field_error("extra_nacionalidade", field_error_code::INVALID_FIELD));
@@ -342,7 +343,7 @@ Napi::Boolean server::createClienteWrapped(const Napi::CallbackInfo& info)
         return Napi::Boolean::New(env, false);
     }
 
-    create<cliente>(_cliente.nome, _cliente.email, _cliente.proprietario, _cliente.cpf_cnpj, _cliente.telefone, _cliente.cep, _cliente.numero, _cliente.complemento);
+    create<cliente>(_cliente.nome, _cliente.email, _cliente.proprietario, _cliente.cpf_cnpj, _cliente.telefone, _cliente.cep, _cliente.endereco, _cliente.numero, _cliente.complemento, _cliente.origem, _cliente.data_origem, _cliente.extra_nome, _cliente.extra_cpf, _cliente.extra_rg, _cliente.extra_nacionalidade, _cliente.extra_profissao, _cliente.extra_renda, _cliente.observacoes);
     return Napi::Boolean::New(env, true);
 }
 
@@ -350,28 +351,30 @@ Napi::Boolean server::updateClienteWrapped(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
 
-    if (info.Length() < 17 || !info[0].IsString() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString() || !info[5].IsString() || !info[6].IsNumber() || !info[7].IsString() || !info[8].IsNumber() || !info[9].IsString() ||  !info[10].IsString() || !info[11].IsString() || !info[12].IsString() || !info[13].IsString() || !info[14].IsString() || !info[15].IsNumber() || !info[16].IsString())
-        Napi::TypeError::New(env, "nome::String, email::String, proprietario::Number, cpf_cnpj::String, telefone::String, cep::String, numero::Number, complemento::String, origem::Number, data_origem::String, extra_nome::String, extra_cpf::String, extra_rg::String, extra_nacionalidade::String, extra_profissao::String, extra_renda::Number, observacoes::String expected")
+    if (info.Length() < 19 || !info[0].IsNumber()|| !info[1].IsString() || !info[2].IsString() || !info[3].IsNumber() || !info[4].IsString() || !info[5].IsString() || !info[6].IsString()|| !info[7].IsString() || !info[8].IsNumber() || !info[9].IsString() || !info[10].IsNumber() || !info[11].IsString() ||  !info[12].IsString() || !info[13].IsString() || !info[14].IsString() || !info[15].IsString() || !info[16].IsString() || !info[17].IsNumber() || !info[18].IsString())
+        Napi::TypeError::New(env, "nome::String, email::String, proprietario::Number, cpf_cnpj::String, telefone::String, cep::String, endereco::String, numero::Number, complemento::String, origem::Number, data_origem::String, extra_nome::String, extra_cpf::String, extra_rg::String, extra_nacionalidade::String, extra_profissao::String, extra_renda::Number, observacoes::String expected")
             .ThrowAsJavaScriptException();
 
     server::cliente _cliente(
-        remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[0].As<Napi::Number>().Int32Value(),
         remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[2].As<Napi::Number>().Int32Value(),
-        remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
+        remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[3].As<Napi::Number>().Int32Value(),
         remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[5].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[6].As<Napi::Number>().Int32Value(),
+        remove_single_quotes(info[6].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[7].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[8].As<Napi::Number>().Int32Value(),
+        info[8].As<Napi::Number>().Int64Value(),
         remove_single_quotes(info[9].As<Napi::String>().Utf8Value(), DUPLICATE),
-        remove_single_quotes(info[10].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[10].As<Napi::Number>().Int32Value(),
         remove_single_quotes(info[11].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[12].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[13].As<Napi::String>().Utf8Value(), DUPLICATE),
         remove_single_quotes(info[14].As<Napi::String>().Utf8Value(), DUPLICATE),
-        info[15].As<Napi::Number>().Int32Value(),
-        remove_single_quotes(info[16].As<Napi::String>().Utf8Value(), DUPLICATE)
+        remove_single_quotes(info[15].As<Napi::String>().Utf8Value(), DUPLICATE),
+        remove_single_quotes(info[16].As<Napi::String>().Utf8Value(), DUPLICATE),
+        info[17].As<Napi::Number>().DoubleValue(),
+        remove_single_quotes(info[18].As<Napi::String>().Utf8Value(), DUPLICATE)
     ); 
 
     json errs = json::array({});
@@ -380,6 +383,7 @@ Napi::Boolean server::updateClienteWrapped(const Napi::CallbackInfo& info)
     if (!validate_numbers(_cliente.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
     if (!validate_numbers(_cliente.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
     if (!validate_numbers(_cliente.cep)) errs.push_back(field_error("cep", field_error_code::INVALID_FIELD));
+    if (!validate_letters(_cliente.endereco)) errs.push_back(field_error("endereco", field_error_code::INVALID_FIELD));
     if (!date::validate_date(_cliente.data_origem)) errs.push_back(field_error("data_origem", field_error_code::INVALID_FIELD));
     if (!validate_letters(_cliente.nome)) errs.push_back(field_error("extra_nome", field_error_code::INVALID_FIELD));
     if (_cliente.extra_cpf.length() > 0 && (!validate_numbers(_cliente.extra_cpf) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.extra_cpf.c_str()))) errs.push_back(field_error("extra_cpf", field_error_code::INVALID_FIELD));
@@ -394,17 +398,15 @@ Napi::Boolean server::updateClienteWrapped(const Napi::CallbackInfo& info)
         Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
         return Napi::Boolean::New(env, false);
     }
-        
-    if (errs.size() > 0)
-        Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
 
     update<cliente>(_cliente.id, field<string>("nome", _cliente.nome), field<string>("email",  _cliente.email),
         field<int>("proprietario", _cliente.proprietario), field<string>("cpf_cnpj", _cliente.cpf_cnpj),
         field<string>("telefone", _cliente.telefone), field<string>("cep", _cliente.cep),
-        field<int>("origem", _cliente.origem), field<string>("data_origem", _cliente.data_origem),
-        field<string>("extra_nome", _cliente.extra_nome), field<string>("extra_rg", _cliente.extra_rg),
-        field<string>("extra_nacionalidade", _cliente.extra_nacionalidade), field<string>("extra_profissao", _cliente.extra_profissao),
-        field<double>("extra_renda", _cliente.extra_renda), field<string>("observacoes", _cliente.observacoes));
+        field<string>("endereco", _cliente.endereco), field<int>("origem", _cliente.origem),
+        field<string>("data_origem", _cliente.data_origem), field<string>("extra_nome", _cliente.extra_nome),
+        field<string>("extra_rg", _cliente.extra_rg), field<string>("extra_nacionalidade", _cliente.extra_nacionalidade),
+        field<string>("extra_profissao", _cliente.extra_profissao), field<double>("extra_renda", _cliente.extra_renda),
+        field<string>("observacoes", _cliente.observacoes));
     return Napi::Boolean::New(env, true);
 }
 

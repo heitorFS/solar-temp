@@ -15,23 +15,8 @@ html, body {
     font-weight: 300;
 }
 
-div, input, select {
+div, input, select, textarea {
     box-sizing: border-box;
-}
-
-.page {
-    background-color: #EEE;
-}
-
-.col-1fr-1fr {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 20px;
-}
-
-.col-1fr-200px {
-    display: grid;
-    grid-template-columns: 1fr 200px;
 }
 
 .table-container {
@@ -44,6 +29,23 @@ div, input, select {
     background-color: #F3C623 !important;
     color: #000;
     font-weight: 500;
+}
+
+.col-1fr-1fr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+}
+
+.col-200px-1fr {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    column-gap: 20px;
+}
+
+.col-1fr-200px {
+    display: grid;
+    grid-template-columns: 1fr 200px;
 }
 
 .col-5-1fr {
@@ -105,10 +107,11 @@ div, input, select {
 
 .form-container {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 50px 0;
 }
 
 .form {
@@ -132,7 +135,7 @@ div, input, select {
     background-color: #FFF;
 }
 
-.field input, .field select {
+.field input, .field select, .field textarea {
     font-family: 'Nunito';
     padding: 20px;
     width: 100%;
@@ -140,6 +143,19 @@ div, input, select {
     border-radius: 7px;
     font-size: 14pt;
     font-weight: 300;
+}
+
+.field textarea {
+    resize: none;
+}
+
+.field:has(> input:read-only) {
+    color: #AAA;
+}
+
+.field input:read-only {
+    border: 1px solid #CCC;
+    color: #AAA;
 }
 
 .switch-container {
@@ -216,6 +232,19 @@ input:checked + .slider:before {
 
 .submit:hover {
     cursor: pointer;
+    color: #FFF;
     background-color: #ceaa29;
+    transition: 200ms;
+}
+
+.secondary-submit {
+    background-color: #FFF;
+    border: 2px solid #F3C623;
+    color: #F3C623;
+    margin-bottom: 15px;
+}
+
+.secondary-submit:hover {
+    border: 2px solid #ceaa29;
     transition: 200ms;
 }

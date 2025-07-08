@@ -77,6 +77,7 @@ namespace server {
         string cpf_cnpj;
         string telefone;
         string cep;
+        string endereco;
         int64_t numero;
         string complemento;
         int origem;
@@ -89,12 +90,12 @@ namespace server {
         double extra_renda;
         string observacoes;
 
-        cliente(int _id, string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, int64_t _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
-        : id(_id), nome(_nome), email(_email), proprietario(_propietario), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), numero(_numero), complemento(_complemento), origem(_origem), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
+        cliente(int _id, string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, string _endereco, int64_t _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
+        : id(_id), nome(_nome), email(_email), proprietario(_propietario), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), endereco(_endereco), numero(_numero), complemento(_complemento), origem(_origem), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
         {}
 
-        cliente(string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, int64_t _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
-        : nome(_nome), email(_email), proprietario(_propietario), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), numero(_numero), complemento(_complemento), origem(_origem), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
+        cliente(string _nome, string _email, int _propietario, string _cpf_cnpj, string _telefone, string _cep, string _endereco, int64_t _numero, string _complemento, int _origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
+        : nome(_nome), email(_email), proprietario(_propietario), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), endereco(_endereco), numero(_numero), complemento(_complemento), origem(_origem), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
         {}
 
         cliente(sqlite3_stmt* stmt)
@@ -106,22 +107,23 @@ namespace server {
             cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 4)));
             telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 5)));
             cep = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 6)));
-            numero = sqlite3_column_int64(stmt, 7);
-            complemento = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 8)));
-            origem = sqlite3_column_int(stmt, 9);
-            data_origem = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 10)));
-            extra_nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 11)));
-            extra_cpf = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 12)));
-            extra_rg = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 13)));
-            extra_nacionalidade = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 14)));
-            extra_profissao = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 15)));
-            extra_renda = sqlite3_column_double(stmt, 16);
-            observacoes = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 17)));
+            endereco = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 7)));
+            numero = sqlite3_column_int64(stmt, 8);
+            complemento = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 9)));
+            origem = sqlite3_column_int(stmt, 10);
+            data_origem = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 11)));
+            extra_nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 12)));
+            extra_cpf = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 13)));
+            extra_rg = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 14)));
+            extra_nacionalidade = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 15)));
+            extra_profissao = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 16)));
+            extra_renda = sqlite3_column_double(stmt, 17);
+            observacoes = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 18)));
         }
 
         static string get_table() { return "clientes"; }
-        static string get_fields() { return "nome, email, proprietario, cpf_cnpj, telefone, cep, numero, complemento, origem, data_origem, extra_nome, extra_cpf, extra_rg, extra_nacionalidade, extra_profissao, extra_renda, observacoes"; }
-        static string get_template() { return "'{}', '{}', {}, '{}', '{}', '{}', {}, '{}', {}, '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}'"; }
+        static string get_fields() { return "nome, email, proprietario, cpf_cnpj, telefone, cep, endereco, numero, complemento, origem, data_origem, extra_nome, extra_cpf, extra_rg, extra_nacionalidade, extra_profissao, extra_renda, observacoes"; }
+        static string get_template() { return "'{}', '{}', {}, '{}', '{}', '{}', '{}', {}, '{}', {}, '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}'"; }
     };
 
     struct colaborador
@@ -211,7 +213,7 @@ namespace server {
         {
             { "id", obj.id }, { "nome", obj.nome },  { "email", obj.email },
             { "proprietario", obj.proprietario }, { "cpf_cnpj", obj.cpf_cnpj }, { "telefone", obj.telefone },
-            { "cep", obj.cep }, { "numero", obj.numero }, { "complemento", obj.complemento },
+            { "cep", obj.cep }, { "endereco", obj.endereco}, { "numero", obj.numero }, { "complemento", obj.complemento },
             { "origem", obj.origem }, { "data_origem", obj.data_origem }, { "extra_nome", obj.extra_nome },
             { "extra_cpf", obj.extra_cpf }, { "extra_rg", obj.extra_rg }, { "extra_nacionalidade", obj.extra_nacionalidade },
             { "extra_profissao", obj.extra_profissao }, { "extra_renda", obj.extra_renda }, { "observacoes", obj.observacoes }

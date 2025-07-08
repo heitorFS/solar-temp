@@ -187,7 +187,6 @@ worker.onmessage = function(event) {
             callback[event.data[1]](JSON.parse(event.data[0]));
             break;
         case 'error':
-            debugger;
             callback[event.data[1]](JSON.parse(event.data[0].message), 'error');
             break;
         case 'form_success':
