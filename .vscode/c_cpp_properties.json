@@ -6,7 +6,9 @@
                 "${workspaceFolder}/**",
                 "C:/libraries/mysql",
                 "C:/libraries",
-                "${workspaceFolder}/electron-quick-start/build/vcpkg_installed/x64-windows/include"
+                "${workspaceFolder}/electron-quick-start/build/vcpkg_installed/x64-windows/include",
+                "${workspaceFolder}/electron-quick-start/node_modules/node-addon-api",
+                "${workspaceFolder}/electron-quick-start/node_modules/node-api-headers/include"
             ],
             "defines": [
                 "_DEBUG",
