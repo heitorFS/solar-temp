@@ -28,6 +28,12 @@ $('#telefone').mask(telephoneMasks[1], telephoneOptions);
 
 $('form').submit((e) => {
   e.preventDefault();
+  
+  var form = $('form')[0];
+  for (let i = 1; i < form.length - 1; i++) {
+      form[i].style.borderColor = '#000';
+  }
+
   if (e.target.id.value == 0) {
     formCallback = (data, type) => {
       if (type === 'error') {
