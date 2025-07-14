@@ -8,22 +8,34 @@ let alterObj = null;
 let formButton;
 let addRow;
 let allRows;
+let getRow;
 let editRow;
 let deleteRow;
 let cpfcnpjSwitch;
 
+let openView;
+let switchTab;
+
 const telephoneMasks = ['(00) 0000-0000Z', '(00) 00000-0000'];
 let telephoneOptions;
 
-const openModal = (title, id) => {
+const openModal = (title, id, wide = false) => {
     $('.modal-title').text(title)
     $('.modal-content').load(`pages/${id}.html`);
-    $('.modal-container').css('display', 'flex');
+    $('#modal-container').css('display', 'flex');
+
+    if (wide)
+        $('.modal').addClass('modal-wide');
+    else
+        $('.modal').removeClass('modal-wide')
 };
 
 const openConfig = (title, id) => {
+    let mod = "";
     switch (id) {
         case 'Origens':
+            mod = 'simple_table';
+
             addRow = () => {
                 formCallback = (_, stat) => {
                     if (stat == 'form_success')
@@ -33,18 +45,74 @@ const openConfig = (title, id) => {
                     }
                 }
 
-                invokeWorker(`createOrigem`, $('#nome')[0].value, formCallback);
+                invokeWorker(`createOrigem`, { nome: $('#nome')[0].value, id_companhia: parseInt($('#companhia')[0].value) }, formCallback);
                 invokeWorker(`getAllOrigens`, null, allRows);
             };
 
             allRows = (data) => {
+                invokeWorker('getAllCompanhias', null, (extra) => {      
+                    debugger;          
+                    $('.table-container').html(`
+                        <div class="table-row col-1fr-1fr-60px table-header"> 
+                            <div>Nome</div>
+                            <div>Companhia</div>
+                            <div class="center">Ações</div>
+                        </div>
+                        ${data.map((origem) => {
+                            return `<div class="table-row col-1fr-1fr-60px">
+                                <div>${origem.nome}</div>
+                                <div>${origem.companhia.nome}</div>
+                                <div class="actions center">
+                                    <div class="table-action delete" onclick="deleteRow(${origem.id})"><i class="fa-solid fa-trash-can"></i></div>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                        <form id="form">
+                            <div class="table-row col-1fr-1fr-60px">
+                                <input class="dynamic-input" id="nome" required/>
+                                <select class="dynamic-input" id="companhia" required>${extra.map((companhia) => {
+                                    return `<option value="${companhia.id}">${companhia.nome}</option>`
+                                })}</select>
+                                <div class="actions center">
+                                    <button class="empty" type="submit"><div class="table-action add"><i class="fa-solid fa-square-plus"></i></div></button>
+                                </div>
+                            </div>
+                        </form>
+                        <script>$('#form').submit((e) => {e.preventDefault(); addRow();})</script>
+                    `);
+                });
+            }
+            
+            deleteRow = (id) => {
+                formCallback = (_, stat) => {}
+                invokeWorker(`deleteOrigem`, parseInt(id), formCallback);
+                invokeWorker(`getAllOrigens`, null, allRows);
+            }
+            break;
+        case 'Companhias':
+            mod = 'simple_table';
+
+            addRow = () => {
+                formCallback = (_, stat) => {
+                    if (stat == 'form_success')
+                        $('#nome')[0].value = "";
+                    else {
+                        showPopup("Companhia já existente", "error");
+                    }
+                }
+
+                invokeWorker(`createCompanhia`, $('#nome')[0].value, formCallback);
+                invokeWorker(`getAllCompanhias`, null, allRows);
+            };
+
+            allRows = (data) => {           
                 $('.table-container').html(`
-                    <div class="table-row col-1-1fr table-header"> 
+                    <div class="table-row col-1fr-60px table-header"> 
                         <div>Nome</div>
                         <div class="center">Ações</div>
                     </div>
                     ${data.map((origem) => {
-                        return `<div class="table-row col-1-1fr">
+                        return `<div class="table-row col-1fr-60px">
                             <div>${origem.nome}</div>
                             <div class="actions center">
                                 <div class="table-action delete" onclick="deleteRow(${origem.id})"><i class="fa-solid fa-trash-can"></i></div>
@@ -52,7 +120,7 @@ const openConfig = (title, id) => {
                         </div>`;
                     }).join('')}
                     <form id="form">
-                        <div class="table-row col-1-1fr">
+                        <div class="table-row col-1fr-60px">
                             <input class="dynamic-input" id="nome" required/>
                             <div class="actions center">
                                 <button class="empty" type="submit"><div class="table-action add"><i class="fa-solid fa-square-plus"></i></div></button>
@@ -65,14 +133,29 @@ const openConfig = (title, id) => {
             
             deleteRow = (id) => {
                 formCallback = (_, stat) => {}
-                invokeWorker(`deleteOrigem`, parseInt(id), formCallback);
-                invokeWorker(`getAllOrigens`, null, allRows);
+                invokeWorker(`deleteCompanhia`, parseInt(id), formCallback);
+                invokeWorker(`getAllCompanhias`, null, allRows);
             }
+
             break;
     }
 
-    openModal(title, id);
+    openModal(title, mod);
     invokeWorker(`getAll${id}`, null, allRows);
+}
+
+const formatDate = (date) => {
+    let arr = date.split('-');
+    return `${arr[2]}/${arr[1]}/${arr[0]}`;
+}
+
+const formatMoney = (money) => {
+    if (money % 1 === 0)
+        return money + ',00';
+    else if ((money * 10) % 1 === 0)
+        return money + '0';
+    else
+        return money;
 }
 
 // endregion Variable declarations
@@ -187,11 +270,15 @@ worker.onmessage = function(event) {
             callback[event.data[1]](JSON.parse(event.data[0]));
             break;
         case 'error':
+            debugger;
             callback[event.data[1]](JSON.parse(event.data[0].message), 'error');
             break;
         case 'form_success':
             callback[event.data[1]](null, 'form_success');
             showPopup(event.data[0], 'success');
+            break;
+        case 'procuracao':
+            callback[event.data[1]](event.data[0]);
             break;
         default:
             showPopup(event.data[0], event.data[2]);

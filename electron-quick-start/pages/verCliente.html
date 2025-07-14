@@ -1,0 +1,64 @@
+<div class="view">
+    <input id="telefone-mask" hidden />
+    <input id="cpf-mask" hidden />
+    <input id="cnpj-mask" hidden />
+    <input id="cep-mask" hidden />
+    <input id="extra_renda-mask" hidden />
+    <div class="view-sidebar">
+        <div class="property-title">Nome</div>
+        <div id="nome" class="property-value"></div>
+        <div class="property-title">E-mail</div>
+        <div id="email" class="property-value"></div>
+        <div class="property-title">Proprietário</div>
+        <div id="proprietario" class="property-value"></div>
+        <div id="cpf_cnpj-label" class="property-title">CPF/CNPJ</div>
+        <div id="cpf_cnpj" class="property-value"></div>
+        <div class="property-title">CEP</div>
+        <div id="cep" class="property-value"></div>
+        <div class="property-title">Endereço</div>
+        <div id="endereco" class="property-value"></div>
+        <div class="property-title">Número</div>
+        <div id="numero" class="property-value"></div>
+        <div class="property-title">Complemento</div>
+        <div id="complemento" class="property-value"></div>
+        <div class="property-title">Origem</div>
+        <div id="origem" class="property-value"></div>
+        <div id="data_origem-label" class="property-title">Data Nascimento/Fundação</div>
+        <div id="data_origem" class="property-value"></div>
+        <div id="extra_nome-label" class="property-title">Nome do Responsável</div>
+        <div id="extra_nome" class="property-value"></div>
+        <div id="extra_cpf-label" class="property-title">CPF do Responsável</div>
+        <div id="extra_cpf" class="property-value"></div>
+        <div id="extra_rg-label" class="property-title">RG</div>
+        <div id="extra_rg" class="property-value"></div>
+        <div id="extra_nacionalidade-label" class="property-title">Nacionalidade</div>
+        <div id="extra_nacionalidade" class="property-value"></div>
+        <div id="extra_profissao-label" class="property-title">Profissão</div>
+        <div id="extra_profissao" class="property-value"></div>
+        <div id="extra_renda-label" class="property-title">Renda mensal</div>
+        <span class="property-value">R$<span id="extra_renda"></span></span>
+        <div class="property-title">Observações</div>
+        <div id="observacoes" class="property-value"></div>
+    </div>
+    <div class="view-content-container">
+        <div class="view-tabs">
+            <div id="propostas" class="view-tab tab-selected" onclick="switchTab('propostas')">
+                <div class="view-tab-icon"><i class="fa-solid fa-paste"></i></div>
+                <span>Propostas</span>
+            </div>
+            <div id="procuracao" class="view-tab" onclick="switchTab('procuracao')">
+                <div class="view-tab-icon"><i class="fa-solid fa-file-contract"></i></div>
+                <span>Procuração</span>
+            </div>
+            <div id="arquivos" class="view-tab" onclick="switchTab('arquivos')">
+                <div class="view-tab-icon"><i class="fa-solid fa-folder-open"></i></div>
+                <span>Arquivos</span>
+            </div>
+        </div>
+        <div class="view-content">
+            
+        </div>
+        <div id="loader-container" class="background-fade"><div class="loader"></div></div>
+    </div>
+</div>
+<script src="js/verCliente.js"></script>

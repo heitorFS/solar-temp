@@ -30,6 +30,7 @@ $('.cpfcnpj-switch').change(function () {
     $('.data-label').text(ret[6]);
 });
 $('#cpf_cnpj').mask('000.000.000-00');
+$('#extra_cpf').mask('000.000.000-00');
 
 telephoneOptions = {
     translation: {
@@ -47,28 +48,38 @@ $('#telefone').mask(telephoneMasks[1], telephoneOptions);
 $('#cep').mask('00000-000');
 $('#extra_renda').mask("#.##0,00", {reverse: true});
 
-allRows = (data) => {
+invokeWorker("getAllColaboradores", null, (data) => {
     for (const colaborador of data) {
         $('#proprietario').append($('<option>', {
             value: colaborador.id,
             text: `${colaborador.nome} - ${getCargo(colaborador.id_cargo)}`
         }));
     }
-};
-invokeWorker("getAllColaboradores", null, allRows);
 
-allRows = (data) => {
+    if (!!alterObj)        
+        $('#proprietario')[0].value = alterObj.proprietario.id;
+});
+
+invokeWorker("getAllOrigens", null, (data) => {
     for (const origem of data) {
         $('#origem').append($('<option>', {
             value: origem.id,
             text: origem.nome
         }));
     }
-};
-invokeWorker("getAllOrigens", null, allRows);
+
+    if (!!alterObj)        
+        $('#origem')[0].value = alterObj.origem.id;
+});
 
 $('form').submit((e) => {
     e.preventDefault();
+
+    var form = $('form')[0];
+    for (let i = 1; i < form.length - 2; i++) {
+        form[i].style.borderColor = '#000';
+    }
+    
     if (e.target.id.value == 0) {
         formCallback = (data, type) => {
             if (type === 'error') {
@@ -87,8 +98,9 @@ $('form').submit((e) => {
                 if (message.length > 0)
                     showPopup(`O${errs > 1 ? 's' : ''} seguinte${errs > 1 ? 's' : ''} campo${errs > 1 ? 's' : ''} ${errs > 1 ? 'estão' : 'está'} incorreto${errs > 1 ? 's' : ''}: ${message}.`, 'error');
             }
-            else
+            else {
                 $('form').trigger('reset');
+            }
         };
         
         invokeWorker('createCliente', {
@@ -128,10 +140,37 @@ $('form').submit((e) => {
             else {
                 $('form').trigger('reset');
                 closeModal();
-                invokeWorker("getAllColaboradores", null, allRows);
+                invokeWorker("getAllClientes", null, (data) => {
+                    $('.table-container').html(`       
+                        <input id="telefone-mask" hidden />
+                        <div class="table-row col-5-1fr table-header"> 
+                            <div>Nome</div>
+                            <div>Telefone</div>
+                            <div>Proprietario</div>
+                            <div>E-mail</div>
+                            <div>Origem</div>
+                            <div class="center">Ações</div>
+                        </div>
+                        ${data.map((cliente) => {
+                            return `<div class="table-row col-5-1fr clickable-row" onclick="openView(event, ${cliente.id})">
+                                <div>${cliente.nome}</div>
+                                <div>${$('#telefone-mask').masked(cliente.telefone)}</div>
+                                <div>${cliente.proprietario.nome}</div>
+                                <div>${cliente.email}</div>
+                                <div>${cliente.origem.nome}</div>
+                                <div class="actions">
+                                    <div class="table-action edit" onclick="editRow(event)"><i class="fa-solid fa-pen-to-square"></i></div>
+                                    <div class="table-action delete" onclick="deleteRow(${cliente.id})"><i class="fa-solid fa-trash-can"></i></div>
+                                </div>
+                                <div style="display: none">${cliente.id}</div>
+                            </div>`;
+                        }).join('')}
+                    `);
+                    $('#telefone-mask').mask(telephoneMasks[1]);
+                });
             }
         };
-
+        
         invokeWorker('updateCliente', {
             id: parseInt(e.target.id.value),
             nome: e.target.nome.value,
@@ -160,20 +199,19 @@ if (!!alterObj) {
     $('#id').attr('value', alterObj.id);
     $('#nome').attr('value', alterObj.nome);
     $('#email').attr('value', alterObj.email);
-    $('#proprietario')[0].value = alterObj.proprietario;
-    $('#cpf_cnpj').attr('value', alterObj.cpf_cnpj);
-    $('#telefone').attr('value', $('#telefone-mask').masked(alterObj.telefone));
-    $('#cep').attr('value', alterObj.cep);
+    $('#cpf_cnpj').attr('value', $('#cpf_cnpj').masked(alterObj.cpf_cnpj));
+    $('#telefone').attr('value', $('#telefone').masked(alterObj.telefone));
+    $('#cep').attr('value', $('#cep').masked(alterObj.cep));
+    $('#endereco').attr('value', alterObj.endereco);
     $('#numero').attr('value', alterObj.numero);
     $('#complemento').attr('value', alterObj.complemento);
-    $('#origem')[0].value = alterObj.origem;
     $('#data_origem')[0].value = alterObj.data_origem;
     $('#extra_nome')[0].value = alterObj.extra_nome;
     $('#extra_cpf')[0].value = alterObj.extra_cpf;
     $('#extra_rg')[0].value = alterObj.extra_rg;
     $('#extra_nacionalidade')[0].value = alterObj.extra_nacionalidade;
     $('#extra_profissao')[0].value = alterObj.extra_profissao;
-    $('#extra_renda')[0].value = alterObj.extra_renda;
+    $('#extra_renda')[0].value = $('#extra_renda').masked(alterObj.extra_renda);
     $('#observacoes')[0].value = alterObj.observacoes;
 }
 
@@ -194,7 +232,7 @@ $('#cep').on('keyup', function () {
                         endereco.prop('readonly', true);
                     }
 
-                    endereco[0].value = `${data.logradouro} - ${data.bairro}, ${data.localidade} - ${data.estado}`;
+                    endereco[0].value = `${data.logradouro} - ${data.bairro} - ${data.localidade} - ${data.estado}`;
                 });
         });
 })

@@ -1,13 +1,19 @@
 const {
     setupDatabase,
-    createCliente, getAllClientes, updateCliente, deleteCliente,
-    createColaborador, getAllColaboradores, updateColaborador, deleteColaborador,
-    createOrigem, getAllOrigens, deleteOrigem } = require('./build/Release/cppserver.node');
+    createCliente, getAllClientes, getCliente, updateCliente, deleteCliente,
+    createColaborador, getColaborador, getAllColaboradores, updateColaborador, deleteColaborador,
+    createCompanhia, getCompanhia, getAllCompanhias, updateCompanhia, deleteCompanhia,
+    createOrigem, getOrigem, getAllOrigens, deleteOrigem } = require('./build/Release/cppserver.node');
+
+const htopdf = require('html-pdf-node');
+const fs = require('fs');
 
 onmessage = (e) => {
     try {
         switch (e.data[0]) {
             case 'setup':
+                if (!fs.existsSync('C:/AEnAzume'))
+                    fs.mkdirSync('C:/AEnAzume');
                 setupDatabase();
                 postMessage(["Conexão com banco de dados bem sucedida.", e.data[0], "info"]);
                 break;
@@ -18,6 +24,10 @@ onmessage = (e) => {
             case 'getAllClientes':
                 var ret = getAllClientes();
                 postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getCliente':
+                var ret = getCliente(e.data[1]);
+                postMessage([ret, e.data[0], "json"])
                 break;
             case 'updateCliente':
                 updateCliente(e.data[1]["id"], e.data[1]["nome"], e.data[1]["email"], e.data[1]["proprietario"], e.data[1]["cpf_cnpj"], e.data[1]["telefone"], e.data[1]["cep"], e.data[1]["endereco"], e.data[1]["numero"], e.data[1]["complemento"], e.data[1]["origem"], e.data[1]["data_origem"], e.data[1]["extra_nome"], e.data[1]["extra_cpf"], e.data[1]["extra_rg"], e.data[1]["extra_nacionalidade"], e.data[1]["extra_profissao"], e.data[1]["extra_renda"], e.data[1]["observacoes"]);
@@ -35,6 +45,10 @@ onmessage = (e) => {
                 var ret = getAllColaboradores();
                 postMessage([ret, e.data[0], "json"]);
                 break;
+            case 'getColaborador':
+                var ret = getColaborador(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
             case 'updateColaborador':
                 updateColaborador(e.data[1]["id"], e.data[1]["nome"], e.data[1]["id_cargo"], e.data[1]["email"], e.data[1]["telefone"], e.data[1]["cpf_cnpj"]);
                 postMessage(["Colaborador atualizado com sucesso", e.data[0], "form_success"]);
@@ -43,17 +57,52 @@ onmessage = (e) => {
                 deleteColaborador(e.data[1]);
                 postMessage(["Colaborador removido com sucesso", e.data[0], "success"]);
                 break;
+            case 'createCompanhia':
+                createCompanhia(e.data[1]);
+                postMessage(["Companhia criado com sucesso", e.data[0], "form_success"]);
+                break;
+            case 'getAllCompanhias':
+                var ret = getAllCompanhias();
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getCompanhia':
+                var ret = getCompanhia(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'updateCompanhia':
+                updateCompanhia(e.data[1]["id"], e.data[1]["nome"]);
+                postMessage(["Companhia atualizado com sucesso", e.data[0], "form_success"]);
+                break;
+            case 'deleteCompanhia':
+                deleteCompanhia(e.data[1]);
+                postMessage(["Companhia removido com sucesso", e.data[0], "success"]);
+                break;
             case 'createOrigem':
-                createOrigem(e.data[1]);
+                createOrigem(e.data[1]["nome"], e.data[1]["id_companhia"]);
                 postMessage(["Origem criada com sucesso", e.data[0], "form_success"]);
                 break;
             case 'getAllOrigens':
                 var ret = getAllOrigens();
                 postMessage([ret, e.data[0], "json"]);
                 break;
+            case 'getOrigem':
+                var ret = getOrigem(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
             case 'deleteOrigem':
                 deleteOrigem(e.data[1]);
                 postMessage(["Origem removida com sucesso", e.data[0], "form_success"])
+                break;
+            case 'generateProcuracao':
+                htopdf.generatePdf({content: e.data[1].content}, {format: 'A4'})
+                    .then((pdf_buffer) => {
+                        if (!fs.existsSync('C:/AEnAzume/Procuracoes'))
+                            fs.mkdirSync('C:/AEnAzume/Procuracoes');
+
+                        fs.writeFileSync(`C:/AEnAzume/Procuracoes/${e.data[1].nome}.pdf`, pdf_buffer, 'binary');
+
+                        postMessage([pdf_buffer, e.data[0], "procuracao"]);
+                    });
                 break;
         }
     }

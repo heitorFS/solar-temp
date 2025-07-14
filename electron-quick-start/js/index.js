@@ -15,9 +15,9 @@ function switchScreen(id) {
 
 function closeModal() {
     alterObj = null;
-    $('.modal-container').css('display', 'none');
+    $('#modal-container').css('display', 'none');
 }
 
 $('document').ready(function () {
-    switchScreen('criarCliente');
+    switchScreen('meusClientes');
 });

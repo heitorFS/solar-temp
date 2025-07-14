@@ -37,6 +37,12 @@ div, input, select, textarea {
     column-gap: 20px;
 }
 
+.col-1fr-1fr-60px {
+    display: grid;
+    grid-template-columns: 1fr 1fr 60px;
+    column-gap: 20px;
+}
+
 .col-200px-1fr {
     display: grid;
     grid-template-columns: 200px 1fr;
@@ -52,7 +58,7 @@ div, input, select, textarea {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 60px;
 }
 
-.col-1-1fr {
+.col-1fr-60px {
     grid-template-columns: 1fr 60px;
 }
 
@@ -61,10 +67,17 @@ div, input, select, textarea {
     padding: 15px;
     background-color: #FFF;
     font-weight: 300;
+    transition: 200ms;
 }
 
 .table-row:nth-of-type(odd) {
     background-color: #F5F5F5;
+}
+
+.clickable-row:hover {
+    cursor: pointer;
+    background-color: #AAA;
+    transition: 200ms;
 }
 
 .center {
@@ -105,6 +118,10 @@ div, input, select, textarea {
     background-color: rgb(68, 160, 76);
 }
 
+.dynamic-input {
+    width: 100%;
+}
+
 .form-container {
     width: 100%;
     min-height: 100%;
@@ -143,6 +160,7 @@ div, input, select, textarea {
     border-radius: 7px;
     font-size: 14pt;
     font-weight: 300;
+    background-color: transparent;
 }
 
 .field textarea {
@@ -247,4 +265,127 @@ input:checked + .slider:before {
 .secondary-submit:hover {
     border: 2px solid #ceaa29;
     transition: 200ms;
+}
+
+.view {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+}
+
+.view-sidebar {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    row-gap: 10px;
+    column-gap: 30px;
+    padding: 5px 20px;
+}
+
+.property-title {    
+    font-size: 14pt;
+    font-weight: 500;
+    color: #10375C;
+}
+
+.property-value {
+    font-size: 14pt;
+    text-align: end;
+    max-width: 300px;
+}
+
+.view-content-container {
+    background: #EEE;
+    position: relative;
+}
+
+.view-tabs {    
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background: #FFF;
+}
+
+.view-tab {    
+    height: 100px;
+    background-color: #FFF;
+    font-size: 15pt;
+    font-weight: 500;
+    border: 1px solid #DDD;
+    border-bottom: none;
+    border-top: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 200ms;
+}
+
+.view-tab:hover {
+    cursor: pointer;
+    background-color: #AAA;
+    transition: 200ms;
+}
+
+.tab-selected {
+    background-color: #F4F4F4;
+}
+
+.view-tab-icon {   
+    font-size: 40px;
+    color: #10375C;
+}
+
+.view-content {
+    padding: 20px;
+}
+
+.view-field > label {
+    background-color: #EEE;
+}
+
+.view-button {    
+    padding: 20px;
+    height: 68px;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    height: 28px;
+    --_g: no-repeat radial-gradient(farthest-side,#FFF 94%,#FFF0);
+    background:
+        var(--_g) 50%  0,
+        var(--_g) 100% 0;
+    background-size: 12px 12px;
+    position: relative;
+    animation: l23-0 1.5s linear infinite;
+}
+
+.loader:before {
+    content: "";
+    position: absolute;
+    height: 12px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #FFF;
+    left:0;
+    top:0;
+    animation: 
+        l23-1 1.5s linear infinite,
+        l23-2 0.5s cubic-bezier(0,200,.8,200) infinite;
+}
+
+@keyframes l23-0 {
+    0%,31%  {background-position: 50% 0   ,100% 0}
+    33%     {background-position: 50% 100%,100% 0}
+    43%,64% {background-position: 50% 0   ,100% 0}
+    66%     {background-position: 50% 0   ,100% 100%}
+    79%     {background-position: 50% 0   ,100% 0}
+    100%    {transform:translateX(calc(-100%/3))}
+}
+
+@keyframes l23-1 {
+    100% {left:calc(100% + 7px)}
+}
+
+@keyframes l23-2 {
+    100% {top:-0.1px}
 }
