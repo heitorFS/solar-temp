@@ -85,12 +85,13 @@ namespace clientes
             proprietario.cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 22)));
             cliente_origem.id = sqlite3_column_int(stmt, 23);
             cliente_origem.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 24)));
+            cliente_origem.origem_companhia.id = sqlite3_column_int(stmt, 25);
         }
 
         static string get_table(bool select) { if (select) return "(clientes INNER JOIN colaboradores ON clientes.id_proprietario = colaboradores.id) INNER JOIN origens ON clientes.id_origem = origens.id"; return "clientes"; }
         static string get_fields(bool select)
         {
-            if (select) return "clientes.id, clientes.nome, clientes.email, clientes.cpf_cnpj, clientes.telefone, clientes.cep, clientes.endereco, clientes.numero, clientes.complemento, clientes.data_origem, clientes.extra_nome, clientes.extra_cpf, clientes.extra_rg, clientes.extra_nacionalidade, clientes.extra_profissao, clientes.extra_renda, clientes.observacoes, colaboradores.id, colaboradores.nome, colaboradores.id_cargo, colaboradores.email, colaboradores.telefone, colaboradores.cpf_cnpj, origens.id, origens.nome";
+            if (select) return "clientes.id, clientes.nome, clientes.email, clientes.cpf_cnpj, clientes.telefone, clientes.cep, clientes.endereco, clientes.numero, clientes.complemento, clientes.data_origem, clientes.extra_nome, clientes.extra_cpf, clientes.extra_rg, clientes.extra_nacionalidade, clientes.extra_profissao, clientes.extra_renda, clientes.observacoes, colaboradores.id, colaboradores.nome, colaboradores.id_cargo, colaboradores.email, colaboradores.telefone, colaboradores.cpf_cnpj, origens.id, origens.nome, origens.id_companhia";
             return "nome, email, id_proprietario, cpf_cnpj, telefone, cep, endereco, numero, complemento, id_origem, data_origem, extra_nome, extra_cpf, extra_rg, extra_nacionalidade, extra_profissao, extra_renda, observacoes";
         }
         static string get_template() { return "'{}', '{}', {}, '{}', '{}', '{}', '{}', {}, '{}', {}, '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}'"; }
@@ -110,7 +111,7 @@ namespace clientes
             }}, { "cpf_cnpj", obj.cpf_cnpj }, { "telefone", obj.telefone },
             { "cep", obj.cep }, { "endereco", obj.endereco}, { "numero", obj.numero }, { "complemento", obj.complemento },
             { "origem", {
-                { "id", obj.cliente_origem.id }, { "nome", obj.cliente_origem.nome }
+                { "id", obj.cliente_origem.id }, { "nome", obj.cliente_origem.nome }, {"id_companhia", obj.cliente_origem.origem_companhia.id}
             }}, { "data_origem", obj.data_origem }, { "extra_nome", obj.extra_nome },
             { "extra_cpf", obj.extra_cpf }, { "extra_rg", obj.extra_rg }, { "extra_nacionalidade", obj.extra_nacionalidade },
             { "extra_profissao", obj.extra_profissao }, { "extra_renda", obj.extra_renda }, { "observacoes", obj.observacoes }
@@ -175,7 +176,6 @@ namespace clientes
         if (!validate_numbers(_cliente.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_cliente.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_cliente.cep)) errs.push_back(field_error("cep", field_error_code::INVALID_FIELD));
-        if (!date::validate_date(_cliente.data_origem)) errs.push_back(field_error("data_origem", field_error_code::INVALID_FIELD));
         if (!validate_letters(_cliente.extra_nome)) errs.push_back(field_error("extra_nome", field_error_code::INVALID_FIELD));
         if (_cliente.extra_cpf.length() > 0 && (!validate_numbers(_cliente.extra_cpf) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.extra_cpf.c_str()))) errs.push_back(field_error("extra_cpf", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_cliente.extra_rg)) errs.push_back(field_error("extra_rg", field_error_code::INVALID_FIELD));
@@ -230,7 +230,6 @@ namespace clientes
         if (!validate_numbers(_cliente.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_cliente.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_cliente.cep)) errs.push_back(field_error("cep", field_error_code::INVALID_FIELD));
-        if (!date::validate_date(_cliente.data_origem)) errs.push_back(field_error("data_origem", field_error_code::INVALID_FIELD));
         if (!validate_letters(_cliente.extra_nome)) errs.push_back(field_error("extra_nome", field_error_code::INVALID_FIELD));
         if (_cliente.extra_cpf.length() > 0 && (!validate_numbers(_cliente.extra_cpf) || !cpfcnpj_validacao::validate_cpfcnpj(_cliente.extra_cpf.c_str()))) errs.push_back(field_error("extra_cpf", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_cliente.extra_rg)) errs.push_back(field_error("extra_rg", field_error_code::INVALID_FIELD));

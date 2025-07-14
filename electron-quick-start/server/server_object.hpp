@@ -58,21 +58,6 @@ void to_json(nlohmann::json& j, field_error& obj)
     j = {{ "name", obj.name }, { "error_type", obj.err }};
 }
 
-struct date
-{
-    static string dash_to_slash(string _d)
-    {
-        return fmt::format("{}/{}/{}", _d.substr(8, 2), _d.substr(5, 2), _d.substr(0, 4));
-    }
-
-    static bool validate_date(string _d)
-    {
-        if (regex_search(_d, regex("^([0-9]){4}-([0-9]){2}-([0-9]){2}$", regex_constants::ECMAScript)))
-            return true;
-        return false;
-    }
-};
-
 #pragma endregion Helper Classes
 
 #pragma region Helper Methods
