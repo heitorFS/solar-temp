@@ -24,7 +24,6 @@ bool server::setupDatabase()
         "   telefone VARCHAR(11) NOT NULL,"
         "   cpf_cnpj VARCHAR(14) NOT NULL UNIQUE"
         ");"
-        "INSERT INTO colaboradores (nome, id_cargo, email, telefone, cpf_cnpj) VALUES( 'uaidhwuiawd', '1', 'aiuwdh@iufahw', '19785198247', '11111111111');"
         "create table companhias ("
         "   id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "   nome VARCHAR(254) NOT NULL UNIQUE"
