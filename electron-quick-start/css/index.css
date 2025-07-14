@@ -144,7 +144,7 @@
     background: linear-gradient(270deg, rgb(36, 175, 82) 45px, rgb(255, 255, 255) 45px);
 }
 
-.modal-container {
+.background-fade {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -157,10 +157,18 @@
 }
 
 .modal {
+    display: grid;
+    grid-template-rows: 50px 1fr;
+    overflow: auto;
+    max-height: 80%;
     width: 60%;
     background-color: #FFF;
     border-radius: 15px;
     padding: 20px;
+}
+
+.modal-wide {
+    width: 90%;
 }
 
 .modal-header {
@@ -178,4 +186,8 @@
     cursor: pointer;
     transform: scale(1.1);
     transition: 200ms;
+}
+
+.modal-content {
+    overflow: auto;
 }
