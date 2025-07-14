@@ -1,5 +1,6 @@
 #include "clientes.hpp"
 #include "colaboradores.hpp"
+#include "companhias.hpp"
 #include "origens.hpp"
 
 #include <sqlite3.h>
