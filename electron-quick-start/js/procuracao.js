@@ -27,7 +27,7 @@ let numberToMonth = (num) => {
     }
 }
 
-let generateProcuracao = (nome, cpf, cep, endereco, numero, companhia, codigo) => {
+let generateProcuracao = (id, nome, cpf, cep, endereco, numero, companhia, codigo) => {
     let endereco_arr = endereco.split(' - ');
     let date = new Date();
     let ret =
@@ -80,10 +80,10 @@ let generateProcuracao = (nome, cpf, cep, endereco, numero, companhia, codigo) =
             <center><b><span class="caps">${nome}</span></b><br /><br />CPF:&nbsp;${cpf}</center>
         </body>`
 
-    formCallback = (buffer) => {
+    formCallback = () => {
         $('#loader-container').css('display', 'none');
         showPopup('Procuração criada com sucesso', 'success');
     }
         
-    invokeWorker('generateProcuracao', {content: ret, nome: nome}, formCallback);
+    invokeWorker('generateProcuracao', {content: ret, nome: `${id}_${nome}_procuracao`}, formCallback);
 }

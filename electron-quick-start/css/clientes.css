@@ -1,0 +1,99 @@
+.arquivo-card {    
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50px 1fr 65px;
+    column-gap: 20px;
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 13px;
+    filter: brightness(0.85);
+    transition: 400ms;
+}
+
+.arquivo-card:hover {
+    cursor: pointer;
+    filter: brightness(1);
+    transition: 400ms;
+}
+
+.arquivo-card:hover > .arquivo-extra {
+    opacity: 1;
+    transition: 300ms;
+}
+
+.arquivo-icon {    
+    font-size: 50px;
+}
+
+.arquivo-info {    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #666;
+}
+
+.arquivo-title {    
+    font-size: 16pt;
+    font-weight: 700;
+}
+
+.arquivo-extra {
+    font-size: 25px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    opacity: 0;
+    transition: 300ms;
+}
+
+.open-folder {
+    color: #6e7179;    
+    transition: 200ms;
+}
+
+.open-folder:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 200ms;
+}
+
+.trash-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 25px;
+    font-size: 18px;
+    color: #FFF;
+    background-color: rgb(160, 68, 68);
+    border-radius: 5px;
+    transition: 200ms;
+}
+
+.trash-container:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 200ms;
+}
+
+.trash-container > .fa-trash {
+    display: inline-block;
+}
+
+.trash-container > .fa-check {
+    display: none;
+}
+
+.confirm-delete {
+    background-color: #FFF !important;
+    color: rgb(160, 68, 68) !important;
+    transition: 200ms;
+}
+
+.confirm-delete > .fa-trash {
+    display: none !important;
+}
+
+.confirm-delete > .fa-check {
+    display: inline-block !important;
+}

@@ -49,7 +49,7 @@ switchTab = (tab) => {
                 $('#loader-container').css('display', 'flex');
 
                 invokeWorker('getCompanhia', alterObj.origem.id_companhia, (data) => {
-                    generateProcuracao(alterObj.nome, $('#cpf-mask').masked(alterObj.cpf_cnpj), $('#cep-mask').masked(alterObj.cep),
+                    generateProcuracao(alterObj.id, alterObj.nome, $('#cpf-mask').masked(alterObj.cpf_cnpj), $('#cep-mask').masked(alterObj.cep),
                         alterObj.endereco, alterObj.numero, data[0].nome, e.target.codigo.value);
                 });
             }
@@ -72,6 +72,58 @@ switchTab = (tab) => {
             `);
             break;
         case 'arquivos':
+            allFiles = (files) => {     
+                $('.arquivos-container').html(
+                    files.map((file) => {
+                        return `
+                            <div class="arquivos-container" onclick="openFile(event, '${file.path + file.name}')">
+                                <div class="arquivo-card">
+                                    <div class="arquivo-icon"><i class="fa-solid fa-file-pdf" style="color: #aa3c3c;"></i></div>
+                                    <div class="arquivo-info">
+                                        <div class="arquivo-title">Procuração</div>
+                                        <div class="arquivo-subtitle">${formatData(file.size)}</div>
+                                    </div>
+                                    <div class="arquivo-extra">
+                                        <i class="fa-solid fa-folder open-folder" onclick="openFolder('${file.path + file.name}')"></i>
+                                        <div class="file-action trash-container" onclick="deleteFile(event, '${file.path + file.name}')"><i class="fa-solid fa-trash"></i><i class="fa-solid fa-check"></i></div>
+                                    </div>
+                                </div>
+                            </div>`;
+                    })
+                );
+            }
+
+            openFile = (e, address) => {
+                if (e.target.localName !== 'path' && e.target.localName !== 'svg' && e.target.classList[0] !== 'file-action')
+                    invokeWorker("openFile", address);
+            }
+
+            openFolder = (address) => {
+                invokeWorker("openFolder", address);
+            }
+
+            deleteFile = (e, address) => {
+                if (!e.currentTarget.classList.contains('confirm-delete'))
+                {
+                    let obj = e.currentTarget;
+                    obj.classList.add('confirm-delete');
+                    setTimeout(() => {
+                        obj.classList.remove('confirm-delete');
+                    }, 3000);
+                }
+                else
+                    invokeWorker("deleteFile", address, (msg) => {
+                        invokeWorker('getProcuracao', alterObj.id, allFiles);
+                        showPopup(msg, 'success');
+                    });
+            }
+
+            invokeWorker('getProcuracao', alterObj.id, allFiles);
+
+            $('.view-content').html(`
+                <div class="arquivos-container">
+                </div>    
+            `);
             break;
     }
 

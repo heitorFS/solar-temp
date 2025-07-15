@@ -16,8 +16,17 @@ let cpfcnpjSwitch;
 let openView;
 let switchTab;
 
+let allFiles;
+let openFile;
+let openFolder;
+let deleteFile;
+
 const telephoneMasks = ['(00) 0000-0000Z', '(00) 00000-0000'];
 let telephoneOptions;
+
+// endregion Variable declarations
+
+// region Function declaration
 
 const openModal = (title, id, wide = false) => {
     $('.modal-title').text(title)
@@ -158,9 +167,26 @@ const formatMoney = (money) => {
         return money;
 }
 
-// endregion Variable declarations
+const formatData = (data) => {
+    let i = 0;
+    while (data / 1024 > 1) {
+        data /= 1024;
+        i++;
+    }
 
-// region Function declaration
+    switch (i) {
+        case 0:
+            return `${Math.floor(data)}B`;
+        case 1:
+            return `${Math.floor(data)}KB`;
+        case 2:
+            return `${Math.floor(data)}MB`;
+        case 3:
+            return `${Math.floor(data)}GB`;
+        default:
+            return 'TOO_BIG';
+    }
+}
 
 const getCargo = (id) => {
     switch (id) {
@@ -270,15 +296,17 @@ worker.onmessage = function(event) {
             callback[event.data[1]](JSON.parse(event.data[0]));
             break;
         case 'error':
-            debugger;
             callback[event.data[1]](JSON.parse(event.data[0].message), 'error');
             break;
         case 'form_success':
             callback[event.data[1]](null, 'form_success');
             showPopup(event.data[0], 'success');
             break;
-        case 'procuracao':
+        case 'files':
             callback[event.data[1]](event.data[0]);
+            break;
+        case 'void':
+            callback[event.data[1]]();
             break;
         default:
             showPopup(event.data[0], event.data[2]);
