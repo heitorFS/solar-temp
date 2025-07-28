@@ -55,11 +55,14 @@ namespace clientes
             cliente_origem.id = id_origem;
         }
 
-        cliente(sqlite3_stmt* stmt)
+        cliente(query_type type, sqlite3_stmt* stmt)
         {
             proprietario = colaborador();
             cliente_origem = origem();
 
+            switch (type)
+            {
+                case query_type::SELECT_FULL:
             id = sqlite3_column_int(stmt, 0);
             nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
             email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 2)));
@@ -79,20 +82,37 @@ namespace clientes
             observacoes = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 16)));
             proprietario.id = sqlite3_column_int(stmt, 17);
             proprietario.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 18)));
-            proprietario.id_cargo = sqlite3_column_int(stmt, 19);
+                    proprietario.id_cargo = (colaboradores::cargo)sqlite3_column_int(stmt, 19);
             proprietario.email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 20)));
             proprietario.telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 21)));
             proprietario.cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 22)));
             cliente_origem.id = sqlite3_column_int(stmt, 23);
             cliente_origem.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 24)));
             cliente_origem.origem_companhia.id = sqlite3_column_int(stmt, 25);
+                    break;                
+                default:
+                    id = sqlite3_column_int(stmt, 0);
+                    nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
+                    email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 2)));
+                    telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
+                    proprietario.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 4)));
+                    cliente_origem.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 5)));
+                    break;
+            }
         }
 
         static string get_table(bool select) { if (select) return "(clientes INNER JOIN colaboradores ON clientes.id_proprietario = colaboradores.id) INNER JOIN origens ON clientes.id_origem = origens.id"; return "clientes"; }
-        static string get_fields(bool select)
+        static string get_fields(query_type select)
         {
-            if (select) return "clientes.id, clientes.nome, clientes.email, clientes.cpf_cnpj, clientes.telefone, clientes.cep, clientes.endereco, clientes.numero, clientes.complemento, clientes.data_origem, clientes.extra_nome, clientes.extra_cpf, clientes.extra_rg, clientes.extra_nacionalidade, clientes.extra_profissao, clientes.extra_renda, clientes.observacoes, colaboradores.id, colaboradores.nome, colaboradores.id_cargo, colaboradores.email, colaboradores.telefone, colaboradores.cpf_cnpj, origens.id, origens.nome, origens.id_companhia";
+            switch (select)
+            {
+                case query_type::SELECT_FULL:
+                    return "clientes.id, clientes.nome, clientes.email, clientes.cpf_cnpj, clientes.telefone, clientes.cep, clientes.endereco, clientes.numero, clientes.complemento, clientes.data_origem, clientes.extra_nome, clientes.extra_cpf, clientes.extra_rg, clientes.extra_nacionalidade, clientes.extra_profissao, clientes.extra_renda, clientes.observacoes, colaboradores.id, colaboradores.nome, colaboradores.id_cargo, colaboradores.email, colaboradores.telefone, colaboradores.cpf_cnpj, origens.id, origens.nome, origens.id_companhia";
+                case query_type::SELECT_SHORT:
+                    return "clientes.id, clientes.nome, clientes.email, clientes.telefone, colaboradores.nome, origens.nome";
+                default:
             return "nome, email, id_proprietario, cpf_cnpj, telefone, cep, endereco, numero, complemento, id_origem, data_origem, extra_nome, extra_cpf, extra_rg, extra_nacionalidade, extra_profissao, extra_renda, observacoes";
+        }
         }
         static string get_template() { return "'{}', '{}', {}, '{}', '{}', '{}', '{}', {}, '{}', {}, '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}'"; }
     };
@@ -121,6 +141,12 @@ namespace clientes
     #pragma endregion JSON serialization
 
     #pragma region operations
+
+    Napi::String get_all_short(const Napi::CallbackInfo& info)
+    {
+        Napi::Env env = info.Env();
+        return Napi::String::New(env, crud::read<cliente>(NULL, query_type::SELECT_SHORT));
+    }
 
     Napi::String get_all(const Napi::CallbackInfo& info)
     {
