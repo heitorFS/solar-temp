@@ -90,6 +90,7 @@ Napi::Object server::Init(Napi::Env env, Napi::Object exports)
 {
     exports.Set("setupDatabase", Napi::Function::New(env, server::setupDatabaseWrapped));
 
+    exports.Set("getAllClientesShort", Napi::Function::New(env, clientes::get_all_short));
     exports.Set("getAllClientes", Napi::Function::New(env, clientes::get_all));
     exports.Set("getCliente", Napi::Function::New(env, clientes::get));
     exports.Set("createCliente", Napi::Function::New(env, clientes::create));

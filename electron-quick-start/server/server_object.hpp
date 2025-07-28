@@ -3,10 +3,6 @@
 
 #define DUPLICATE true
 #define REMOVE false
-#define SELECT true
-#define INSERT false
-#define DELETE false
-#define VALIDATE false
 
 #include "crud.hpp"
 #include "validations.hpp"

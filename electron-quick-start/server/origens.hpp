@@ -90,7 +90,7 @@ namespace origens
         return Napi::String::New(env, crud::read<origem>(&extra));
     }
 
-    Napi::Boolean create(const Napi::CallbackInfo& info)
+    Napi::Number create(const Napi::CallbackInfo& info)
     {
         Napi::Env env = info.Env();
 
@@ -111,11 +111,11 @@ namespace origens
         if (errs.size() > 0)
         {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();        
-            return Napi::Boolean::New(env, false);
+            return Napi::Number::New(env, -1);
         }
 
-        crud::create<origem>(_origem.nome, _origem.origem_companhia.id);
-        return Napi::Boolean::New(env, true);
+        int64_t id = crud::create<origem>(_origem.nome, _origem.origem_companhia.id);
+        return Napi::Number::New(env, (double)id);
     }
 
     Napi::Boolean remove(const Napi::CallbackInfo& info)

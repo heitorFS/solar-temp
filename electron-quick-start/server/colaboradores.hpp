@@ -106,7 +106,7 @@ namespace colaboradores
         return Napi::String::New(env, crud::read<colaborador>(&extra));
     }
 
-    Napi::Boolean create(const Napi::CallbackInfo& info)
+    Napi::Number create(const Napi::CallbackInfo& info)
     {
         Napi::Env env = info.Env();
 
@@ -130,15 +130,14 @@ namespace colaboradores
         if (!validate_numbers(_colaborador.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_colaborador.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
 
         validate_unique(errs, colaborador::get_table(VALIDATE), field<string>("cpf_cnpj", _colaborador.cpf_cnpj));
-
         if (errs.size() > 0)
         {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
-            return Napi::Boolean::New(env, false);
+            return Napi::Number::New(env, -1);
         }
-        crud::create<colaborador>(_colaborador.nome, _colaborador.id_cargo, _colaborador.email, _colaborador.telefone, _colaborador.cpf_cnpj);
         
-        return Napi::Boolean::New(env, true);
+        int64_t id = crud::create<colaborador>(_colaborador.nome, (int)_colaborador.id_cargo, _colaborador.email, _colaborador.telefone, _colaborador.cpf_cnpj);        
+        return Napi::Number::New(env, (double)id);
     }
 
     Napi::Boolean update(const Napi::CallbackInfo& info)

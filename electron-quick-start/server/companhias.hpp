@@ -75,7 +75,7 @@ namespace companhias
         return Napi::String::New(env, crud::read<companhia>(&extra));
     }
 
-    Napi::Boolean create(const Napi::CallbackInfo& info)
+    Napi::Number create(const Napi::CallbackInfo& info)
     {
         Napi::Env env = info.Env();
 
@@ -95,11 +95,11 @@ namespace companhias
         if (errs.size() > 0)
         {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();        
-            return Napi::Boolean::New(env, false);
+            return Napi::Number::New(env, -1);
         }
 
-        crud::create<companhia>(_companhia.nome);
-        return Napi::Boolean::New(env, true);
+        int64_t id = crud::create<companhia>(_companhia.nome);
+        return Napi::Number::New(env, (double)id);
     }
 
     Napi::Boolean update(const Napi::CallbackInfo& info)

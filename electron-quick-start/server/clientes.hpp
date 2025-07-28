@@ -167,7 +167,7 @@ namespace clientes
         return Napi::String::New(env, crud::read<cliente>(&extra));
     }
 
-    Napi::Boolean create(const Napi::CallbackInfo& info)
+    Napi::Number create(const Napi::CallbackInfo& info)
     {
         Napi::Env env = info.Env();
 
@@ -213,11 +213,11 @@ namespace clientes
         if (errs.size() > 0)
         {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
-            return Napi::Boolean::New(env, false);
+            return Napi::Number::New(env, -1);
         }
 
-        crud::create<cliente>(_cliente.nome, _cliente.email, _cliente.proprietario.id, _cliente.cpf_cnpj, _cliente.telefone, _cliente.cep, _cliente.endereco, _cliente.numero, _cliente.complemento, _cliente.cliente_origem.id, _cliente.data_origem, _cliente.extra_nome, _cliente.extra_cpf, _cliente.extra_rg, _cliente.extra_nacionalidade, _cliente.extra_profissao, _cliente.extra_renda, _cliente.observacoes);
-        return Napi::Boolean::New(env, true);
+        int64_t id = crud::create<cliente>(_cliente.nome, _cliente.email, _cliente.proprietario.id, _cliente.cpf_cnpj, _cliente.telefone, _cliente.cep, _cliente.endereco, _cliente.numero, _cliente.complemento, _cliente.cliente_origem.id, _cliente.data_origem, _cliente.extra_nome, _cliente.extra_cpf, _cliente.extra_rg, _cliente.extra_nacionalidade, _cliente.extra_profissao, _cliente.extra_renda, _cliente.observacoes);
+        return Napi::Number::New(env, (double)id);
     }
 
     Napi::Boolean update(const Napi::CallbackInfo& info)

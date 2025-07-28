@@ -43,7 +43,7 @@ static int close_connection(void* _db, int count, char** data, char** columns)
 namespace crud
 {
     template <typename T, typename... Args>
-    void create(Args... args)
+    int64_t create(Args... args)
     {
         sqlite3* db;
         sqlite3_open("C:/AEnAzume/database.db", &db); 
@@ -53,7 +53,11 @@ namespace crud
             fmt::format(query,
                 forward<Args>(args)...);
 
-        sqlite3_exec(db, sql.c_str(), close_connection, db, NULL);
+        sqlite3_exec(db, sql.c_str(), NULL, db, NULL);
+        int64_t last_id = sqlite3_last_insert_rowid(db);
+
+        sqlite3_close(db);
+        return last_id;
     }
 
     template <typename T>
