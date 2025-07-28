@@ -293,7 +293,7 @@ namespace clientes
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, cliente::get_table(DELETE), field<size_t>("id", id)))
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
-        crud::remove<cliente>(id);
+        crud::remove<cliente>(field<int>("id", id));
 
         return Napi::Boolean::New(env, true);
     }

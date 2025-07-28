@@ -146,7 +146,7 @@ namespace companhias
             return Napi::Boolean::New(env, false);
         }
 
-        crud::remove<companhia>(id);
+        crud::remove<companhia>(field<int>("id", id));
         return Napi::Boolean::New(env, true);
     }
 }

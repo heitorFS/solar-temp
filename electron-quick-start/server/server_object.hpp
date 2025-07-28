@@ -20,20 +20,6 @@ using json = nlohmann::json;
 
 #pragma region Helper Classes
 
-template<typename T>
-struct field
-{
-    string name;
-    T value;
-    const char* extra = NULL;
-
-    field(string _name, T _value) : name(_name), value(_value) 
-    {}
-
-    field(string _name, T _value, const char* _extra) : name(_name), value(_value), extra(_extra)
-    {}
-};
-
 enum field_error_code
 {
     INVALID_FIELD,

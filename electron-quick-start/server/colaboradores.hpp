@@ -188,7 +188,7 @@ namespace colaboradores
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, colaborador::get_table(VALIDATE), field<size_t>("id", id)))
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
-        crud::remove<colaborador>(id);
+        crud::remove<colaborador>(field<int>("id", id));
 
         return Napi::Boolean::New(env, true);
     }

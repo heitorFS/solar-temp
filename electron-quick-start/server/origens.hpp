@@ -131,7 +131,7 @@ namespace origens
         if (validate_unique(errs, "origens", field<size_t>("id", id)))
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
 
-        crud::remove<origem>(id);
+        crud::remove<origem>(field<int>("id", id));
         return Napi::Boolean::New(env, true);
     }
 }

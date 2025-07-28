@@ -6,6 +6,21 @@
 #include <string>
 
 using namespace std;
+
+template<typename T>
+struct field
+{
+    string name;
+    T value;
+    const char* extra = NULL;
+
+    field(string _name, T _value) : name(_name), value(_value) 
+    {}
+
+    field(string _name, T _value, const char* _extra) : name(_name), value(_value), extra(_extra)
+    {}
+};
+
 enum query_type
 {
     INSERT = 0,
@@ -97,15 +112,16 @@ namespace crud
     }
 
     template <typename T>
-    void remove(size_t id)
+    void remove(field<int>& _field)
     {
         sqlite3* db;
         int err = sqlite3_open("C:/AEnAzume/database.db", &db);
 
         string sql = 
-            fmt::format("DELETE FROM {} WHERE id = {};",
+            fmt::format("DELETE FROM {} WHERE {} = {};",
                 T::get_table(DELETE),
-                id);
+                _field.name,
+                _field.value);
 
         err = sqlite3_exec(db, sql.c_str(), close_connection, db, NULL);
     }
