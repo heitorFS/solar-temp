@@ -84,19 +84,17 @@ $('form').submit((e) => {
         formCallback = (data, type) => {
             if (type === 'error') {
                 let message = "";
-                let errs = 0;
                 for (const i in data) {
                     if (data[i].error_type == 1)
                         showPopup(`O ${(data[i].name === 'cpf_cnpj' ? $(`#cpf_cnpj`).cleanVal().length === 11 ? 'CPF' : 'CNPJ' : data[i].name)} inserido já foi utilizado`, 'error');
                     else
                     {
                         message += `${i == 0 ? '' : '; '}${(data[i].name === 'cpf_cnpj' ? $(`#cpf_cnpj`).cleanVal().length === 11 ? 'CPF' : 'CNPJ' : data[i].name)}`;
-                        errs++;
                     }
                     $(`#${data[i].name}`).css('border-color', '#F00');
                 }
-                if (message.length > 0)
-                    showPopup(`O${errs > 1 ? 's' : ''} seguinte${errs > 1 ? 's' : ''} campo${errs > 1 ? 's' : ''} ${errs > 1 ? 'estão' : 'está'} incorreto${errs > 1 ? 's' : ''}: ${message}.`, 'error');
+                if (message != "")
+                    showPopup(`O${data.length > 1 ? 's' : ''} seguinte${data.length > 1 ? 's' : ''} campo${data.length > 1 ? 's' : ''} ${data.length > 1 ? 'estão' : 'está'} incorreto${data.length > 1 ? 's' : ''}: ${message}.`, 'error');
             }
             else {
                 $('form').trigger('reset');
@@ -120,7 +118,7 @@ $('form').submit((e) => {
             extra_rg: e.target.extra_rg.value,
             extra_nacionalidade: e.target.extra_nacionalidade.value,
             extra_profissao: e.target.extra_profissao.value,
-            extra_renda: parseFloat($('#extra_renda').cleanVal() / 100),
+            extra_renda: $('#extra_renda').cleanVal() === '' ? 0 : parseFloat($('#extra_renda').cleanVal() / 100),
             observacoes: e.target.observacoes.value
         }, formCallback);
 
@@ -130,12 +128,18 @@ $('form').submit((e) => {
     else {
         formCallback = (data, type) => {
             if (type === 'error') {
-                let message = `O${data.length > 1 ? 's' : ''} seguinte${data.length > 1 ? 's' : ''} campo${data.length > 1 ? 's' : ''} ${data.length > 1 ? 'estão' : 'está'} incorreto${data.length > 1 ? 's' : ''}: `;
+                let message = "";
                 for (const i in data) {
-                    message += `${(data[i] === 'cpf_cnpj' ? $(`#cpf_cnpj`).cleanVal().length === 11 ? 'CPF' : 'CNPJ' : data[i])}${i == data.length - 1 ? '' : '; '}`;
-                    $(`#${data[i]}`).css('border-color', '#F00');
+                    if (data[i].error_type == 1)
+                        showPopup(`O ${(data[i].name === 'cpf_cnpj' ? $(`#cpf_cnpj`).cleanVal().length === 11 ? 'CPF' : 'CNPJ' : data[i].name)} inserido já foi utilizado`, 'error');
+                    else
+                    {
+                        message += `${i == 0 ? '' : '; '}${(data[i].name === 'cpf_cnpj' ? $(`#cpf_cnpj`).cleanVal().length === 11 ? 'CPF' : 'CNPJ' : data[i].name)}`;
+                    }
+                    $(`#${data[i].name}`).css('border-color', '#F00');
                 }
-                showPopup(`${message}.`, 'error');
+                if (message != "")
+                    showPopup(`O${data.length > 1 ? 's' : ''} seguinte${data.length > 1 ? 's' : ''} campo${data.length > 1 ? 's' : ''} ${data.length > 1 ? 'estão' : 'está'} incorreto${data.length > 1 ? 's' : ''}: ${message}.`, 'error');
             }
             else {
                 $('form').trigger('reset');
