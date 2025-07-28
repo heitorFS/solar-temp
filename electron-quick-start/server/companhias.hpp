@@ -14,10 +14,10 @@ namespace companhias
 
     struct companhia
     {
-        int id = 0;
+        size_t id = 0;
         string nome;
 
-        companhia(int _id, string _nome)
+        companhia(size_t _id, string _nome)
             : id(_id), nome(_nome) {}
 
         companhia(string _nome)
@@ -25,7 +25,7 @@ namespace companhias
 
         companhia(query_type _,sqlite3_stmt* stmt)
         {
-            id = sqlite3_column_int(stmt, 0);
+            id = sqlite3_column_int64(stmt, 0);
             nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
         }
 
@@ -146,7 +146,7 @@ namespace companhias
             return Napi::Boolean::New(env, false);
         }
 
-        crud::remove<companhia>(field<int>("id", id));
+        crud::remove<companhia>(field<size_t>("id", id));
         return Napi::Boolean::New(env, true);
     }
 }

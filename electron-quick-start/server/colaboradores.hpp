@@ -23,14 +23,14 @@ namespace colaboradores
 
     struct colaborador
     {
-        int id = 0;
+        size_t id = 0;
         string nome;
         cargo id_cargo;
         string email;
         string telefone;
         string cpf_cnpj;
 
-        colaborador(int _id, string _nome, int _id_cargo, string _email, string _telefone, string _cpf_cnpj)
+        colaborador(size_t _id, string _nome, int _id_cargo, string _email, string _telefone, string _cpf_cnpj)
         {
             id = _id;
             nome = _nome;
@@ -51,7 +51,7 @@ namespace colaboradores
 
         colaborador(query_type _, sqlite3_stmt* stmt)
         {
-            id = sqlite3_column_int(stmt, 0);
+            id = sqlite3_column_int64(stmt, 0);
             nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
             id_cargo = (cargo)sqlite3_column_int(stmt, 2);
             email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
@@ -135,7 +135,7 @@ namespace colaboradores
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
             return Napi::Number::New(env, -1);
         }
-        
+
         int64_t id = crud::create<colaborador>(_colaborador.nome, (int)_colaborador.id_cargo, _colaborador.email, _colaborador.telefone, _colaborador.cpf_cnpj);        
         return Napi::Number::New(env, (double)id);
     }
@@ -169,7 +169,7 @@ namespace colaboradores
         if (errs.size() > 0)
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
 
-        crud::update<colaborador>(_colaborador.id, field<string>("nome", _colaborador.nome), field<int>("id_cargo",  (int)_colaborador.id_cargo),
+        crud::update<colaborador>(_colaborador.id, field<string>("nome", _colaborador.nome), field<size_t>("id_cargo",  (int)_colaborador.id_cargo),
             field<string>("email", _colaborador.email), field<string>("telefone", _colaborador.telefone),
             field<string>("cpf_cnpj", _colaborador.cpf_cnpj));
 
@@ -188,7 +188,7 @@ namespace colaboradores
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, colaborador::get_table(VALIDATE), field<size_t>("id", id)))
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
-        crud::remove<colaborador>(field<int>("id", id));
+        crud::remove<colaborador>(field<size_t>("id", id));
 
         return Napi::Boolean::New(env, true);
     }

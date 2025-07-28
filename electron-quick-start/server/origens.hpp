@@ -16,18 +16,18 @@ namespace origens
 
     struct origem
     {
-        int id = 0;
+        size_t id = 0;
         string nome;
         companhia origem_companhia;
 
-        origem(int _id, string _nome, int id_companhia)
+        origem(size_t _id, string _nome, size_t id_companhia)
             : id(_id), nome(_nome)
         {
             origem_companhia = companhia();
             origem_companhia.id = id_companhia;
         }
 
-        origem(string _nome, int id_companhia) : nome(_nome)
+        origem(string _nome, size_t id_companhia) : nome(_nome)
         {            
             origem_companhia = companhia();
             origem_companhia.id = id_companhia;
@@ -37,9 +37,9 @@ namespace origens
         {
             origem_companhia = companhia();
 
-            id = sqlite3_column_int(stmt, 0);
+            id = sqlite3_column_int64(stmt, 0);
             nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
-            origem_companhia.id = sqlite3_column_int(stmt, 2);
+            origem_companhia.id = sqlite3_column_int64(stmt, 2);
             origem_companhia.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
         }
 
@@ -131,7 +131,7 @@ namespace origens
         if (validate_unique(errs, "origens", field<size_t>("id", id)))
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
 
-        crud::remove<origem>(field<int>("id", id));
+        crud::remove<origem>(field<size_t>("id", id));
         return Napi::Boolean::New(env, true);
     }
 }

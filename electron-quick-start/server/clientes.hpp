@@ -17,7 +17,7 @@ namespace clientes
     
     struct cliente
     {
-        int id = 0;
+        size_t id = 0;
         string nome;
         string email;
         colaborador proprietario;
@@ -37,7 +37,7 @@ namespace clientes
         double extra_renda;
         string observacoes;
 
-        cliente(int _id, string _nome, string _email, int id_proprietario, string _cpf_cnpj, string _telefone, string _cep, string _endereco, int64_t _numero, string _complemento, int id_origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
+        cliente(size_t _id, string _nome, string _email, size_t id_proprietario, string _cpf_cnpj, string _telefone, string _cep, string _endereco, int64_t _numero, string _complemento, size_t id_origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
         : id(_id), nome(_nome), email(_email), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), endereco(_endereco), numero(_numero), complemento(_complemento), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
         {
             proprietario = colaborador();
@@ -46,7 +46,7 @@ namespace clientes
             cliente_origem.id = id_origem;
         }
 
-        cliente(string _nome, string _email, int id_proprietario, string _cpf_cnpj, string _telefone, string _cep, string _endereco, int64_t _numero, string _complemento, int id_origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
+        cliente(string _nome, string _email, size_t id_proprietario, string _cpf_cnpj, string _telefone, string _cep, string _endereco, int64_t _numero, string _complemento, size_t id_origem, string _data_origem, string _extra_nome, string _extra_cpf, string _extra_rg, string _extra_nacionalidade, string _extra_profissao, double _extra_renda, string _observacoes)
         : nome(_nome), email(_email), cpf_cnpj(_cpf_cnpj), telefone(_telefone), cep(_cep), endereco(_endereco), numero(_numero), complemento(_complemento), data_origem(_data_origem), extra_nome(_extra_nome), extra_cpf(_extra_cpf), extra_rg(_extra_rg), extra_nacionalidade(_extra_nacionalidade), extra_profissao(_extra_profissao), extra_renda(_extra_renda), observacoes(_observacoes)
         {
             proprietario = colaborador();
@@ -59,39 +59,39 @@ namespace clientes
         {
             proprietario = colaborador();
             cliente_origem = origem();
-
+            
             switch (type)
             {
                 case query_type::SELECT_FULL:
-            id = sqlite3_column_int(stmt, 0);
-            nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
-            email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 2)));
-            cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
-            telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 4)));
-            cep = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 5)));
-            endereco = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 6)));
-            numero = sqlite3_column_int64(stmt, 7);
-            complemento = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 8)));
-            data_origem = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 9)));
-            extra_nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 10)));
-            extra_cpf = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 11)));
-            extra_rg = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 12)));
-            extra_nacionalidade = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 13)));
-            extra_profissao = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 14)));
-            extra_renda = sqlite3_column_double(stmt, 15);
-            observacoes = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 16)));
-            proprietario.id = sqlite3_column_int(stmt, 17);
-            proprietario.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 18)));
+                    id = sqlite3_column_int64(stmt, 0);
+                    nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
+                    email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 2)));
+                    cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
+                    telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 4)));
+                    cep = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 5)));
+                    endereco = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 6)));
+                    numero = sqlite3_column_int64(stmt, 7);
+                    complemento = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 8)));
+                    data_origem = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 9)));
+                    extra_nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 10)));
+                    extra_cpf = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 11)));
+                    extra_rg = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 12)));
+                    extra_nacionalidade = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 13)));
+                    extra_profissao = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 14)));
+                    extra_renda = sqlite3_column_double(stmt, 15);
+                    observacoes = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 16)));
+                    proprietario.id = sqlite3_column_int64(stmt, 17);
+                    proprietario.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 18)));
                     proprietario.id_cargo = (colaboradores::cargo)sqlite3_column_int(stmt, 19);
-            proprietario.email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 20)));
-            proprietario.telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 21)));
-            proprietario.cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 22)));
-            cliente_origem.id = sqlite3_column_int(stmt, 23);
-            cliente_origem.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 24)));
-            cliente_origem.origem_companhia.id = sqlite3_column_int(stmt, 25);
+                    proprietario.email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 20)));
+                    proprietario.telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 21)));
+                    proprietario.cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 22)));
+                    cliente_origem.id = sqlite3_column_int64(stmt, 23);
+                    cliente_origem.nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 24)));
+                    cliente_origem.origem_companhia.id = sqlite3_column_int64(stmt, 25);
                     break;                
                 default:
-                    id = sqlite3_column_int(stmt, 0);
+                    id = sqlite3_column_int64(stmt, 0);
                     nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
                     email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 2)));
                     telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
@@ -111,8 +111,8 @@ namespace clientes
                 case query_type::SELECT_SHORT:
                     return "clientes.id, clientes.nome, clientes.email, clientes.telefone, colaboradores.nome, origens.nome";
                 default:
-            return "nome, email, id_proprietario, cpf_cnpj, telefone, cep, endereco, numero, complemento, id_origem, data_origem, extra_nome, extra_cpf, extra_rg, extra_nacionalidade, extra_profissao, extra_renda, observacoes";
-        }
+                    return "nome, email, id_proprietario, cpf_cnpj, telefone, cep, endereco, numero, complemento, id_origem, data_origem, extra_nome, extra_cpf, extra_rg, extra_nacionalidade, extra_profissao, extra_renda, observacoes";
+            }
         }
         static string get_template() { return "'{}', '{}', {}, '{}', '{}', '{}', '{}', {}, '{}', {}, '{}', '{}', '{}', '{}', '{}', '{}', {}, '{}'"; }
     };
@@ -271,9 +271,9 @@ namespace clientes
         }
 
         crud::update<cliente>(_cliente.id, field<string>("nome", _cliente.nome), field<string>("email",  _cliente.email),
-            field<int>("id_proprietario", _cliente.proprietario.id), field<string>("cpf_cnpj", _cliente.cpf_cnpj),
+            field<size_t>("id_proprietario", _cliente.proprietario.id), field<string>("cpf_cnpj", _cliente.cpf_cnpj),
             field<string>("telefone", _cliente.telefone), field<string>("cep", _cliente.cep),
-            field<string>("endereco", _cliente.endereco), field<int>("id_origem", _cliente.cliente_origem.id),
+            field<string>("endereco", _cliente.endereco), field<size_t>("id_origem", _cliente.cliente_origem.id),
             field<string>("data_origem", _cliente.data_origem), field<string>("extra_nome", _cliente.extra_nome),
             field<string>("extra_rg", _cliente.extra_rg), field<string>("extra_nacionalidade", _cliente.extra_nacionalidade),
             field<string>("extra_profissao", _cliente.extra_profissao), field<double>("extra_renda", _cliente.extra_renda),
@@ -293,7 +293,7 @@ namespace clientes
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, cliente::get_table(DELETE), field<size_t>("id", id)))
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
-        crud::remove<cliente>(field<int>("id", id));
+        crud::remove<cliente>(field<size_t>("id", id));
 
         return Napi::Boolean::New(env, true);
     }
