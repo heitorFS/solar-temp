@@ -27,7 +27,7 @@ allRows = (data) => {
     $('#telefone-mask').mask(telephoneMasks[1]);
 }
 
-invokeWorker("getAllClientes", null, allRows);
+invokeWorker("getAllClientesShort", null, allRows);
 
 editRow = (e) => {
     getRow = (data) => {
@@ -69,17 +69,18 @@ deleteRow = (id) => {
     }
     
     invokeWorker(`deleteCliente`, parseInt(id));
-    invokeWorker("getAllCliente", null, allRows);
+    invokeWorker("getAllClientesShort", null, allRows);
 }
 
 openView = (e, id) => {
+    if (e.target.localName === 'path' && e.target.localName === 'svg' && e.target.classList[0] === 'table-action')
+        return;
+
     getRow = (data) => {
         alterObj = data[0];
         openModal(`Cliente - ${alterObj.nome}`, 'verCliente', true);
     };
-    
-    if (e.target.localName !== 'path' && e.target.localName !== 'svg' && e.target.classList[0] !== 'table-action')
-        invokeWorker("getCliente", parseInt(id), getRow);
+    invokeWorker("getCliente", parseInt(id), getRow);
 }
 
 $('#telefone-mask').mask(telephoneMasks[1]);
