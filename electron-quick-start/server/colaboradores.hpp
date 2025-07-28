@@ -10,13 +10,22 @@ using namespace std;
 
 namespace colaboradores
 {
+    enum cargo
+    {
+        VENDEDOR,
+        PROJETISTA,
+        INSTALADOR,
+        FINANCEIRO,
+        ADMINISTRATIVO
+    };
+
     #pragma region class
 
     struct colaborador
     {
         int id = 0;
         string nome;
-        int id_cargo;
+        cargo id_cargo;
         string email;
         string telefone;
         string cpf_cnpj;
@@ -25,7 +34,7 @@ namespace colaboradores
         {
             id = _id;
             nome = _nome;
-            id_cargo = _id_cargo;
+            id_cargo = (cargo)_id_cargo;
             email = _email;
             telefone = _telefone;
             cpf_cnpj = _cpf_cnpj;
@@ -34,7 +43,7 @@ namespace colaboradores
         colaborador(string _nome, int _id_cargo, string _email, string _telefone, string _cpf_cnpj)
         {
             nome = _nome;
-            id_cargo = _id_cargo;
+            id_cargo = (cargo)_id_cargo;
             email = _email;
             telefone = _telefone;
             cpf_cnpj = _cpf_cnpj;
@@ -115,7 +124,7 @@ namespace colaboradores
 
         json errs = json::array({});
         if (!validate_letters(_colaborador.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
-        if (_colaborador.id_cargo < 1 || _colaborador.id_cargo > 5) errs.push_back(field_error("cargo", field_error_code::INVALID_FIELD));
+        if (_colaborador.id_cargo < 0 || _colaborador.id_cargo > 4) errs.push_back(field_error("cargo", field_error_code::INVALID_FIELD));
         if (!validate_email(_colaborador.email)) errs.push_back(field_error("email", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_colaborador.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_colaborador.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_colaborador.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
@@ -161,7 +170,7 @@ namespace colaboradores
         if (errs.size() > 0)
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
 
-        crud::update<colaborador>(_colaborador.id, field<string>("nome", _colaborador.nome), field<int>("id_cargo",  _colaborador.id_cargo),
+        crud::update<colaborador>(_colaborador.id, field<string>("nome", _colaborador.nome), field<int>("id_cargo",  (int)_colaborador.id_cargo),
             field<string>("email", _colaborador.email), field<string>("telefone", _colaborador.telefone),
             field<string>("cpf_cnpj", _colaborador.cpf_cnpj));
 
