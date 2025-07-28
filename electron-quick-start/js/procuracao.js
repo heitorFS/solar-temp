@@ -74,6 +74,7 @@ let generateProcuracao = (id, nome, cpf, cep, endereco, numero, companhia, codig
             10. Memorial Técnico Descritivo;<br />
             11. Planta de Situação e Localização;<br />
             12. Diagrama Unifilar e Trifilar da instalação;
+            13. Alteração de Dados Cadastrais
             <br /><br /><br />
             <center>Local/Data:&nbsp;${endereco_arr[2]},&nbsp;<span class="date">${date.getDate()} de ${numberToMonth(date.getMonth())} de ${date.getFullYear()}</span></center>
             <br /><br /><br /><hr /><br />
