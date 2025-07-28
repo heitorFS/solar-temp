@@ -302,6 +302,9 @@ worker.onmessage = function(event) {
             callback[event.data[1]](null, 'form_success');
             showPopup(event.data[0], 'success');
             break;
+        case 'create_id':
+            callback[event.data[1]](event.data[0]);
+            break;
         case 'files':
             callback[event.data[1]](event.data[0]);
             break;
@@ -310,14 +313,14 @@ worker.onmessage = function(event) {
             break;
         default:
             showPopup(event.data[0], event.data[2]);
-            break;
+            return;
     }
+    delete callback[event.data[1]];
 }
 
 function invokeWorker(operation, data, _callback = null) {
     if (!!_callback)
         callback[operation] = _callback;
-
     worker.postMessage([operation, data]);
 }
 

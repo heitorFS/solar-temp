@@ -1,6 +1,6 @@
 const {
     setupDatabase,
-    createCliente, getAllClientes, getCliente, updateCliente, deleteCliente,
+    createCliente, getAllClientes, getAllClientesShort, getCliente, updateCliente, deleteCliente,
     createColaborador, getColaborador, getAllColaboradores, updateColaborador, deleteColaborador,
     createCompanhia, getCompanhia, getAllCompanhias, updateCompanhia, deleteCompanhia,
     createOrigem, getOrigem, getAllOrigens, deleteOrigem } = require('./build/Release/cppserver.node');
@@ -40,6 +40,10 @@ onmessage = (e) => {
             case 'createCliente':
                 createCliente(e.data[1]["nome"], e.data[1]["email"], e.data[1]["proprietario"], e.data[1]["cpf_cnpj"], e.data[1]["telefone"], e.data[1]["cep"], e.data[1]["endereco"], e.data[1]["numero"], e.data[1]["complemento"], e.data[1]["origem"], e.data[1]["data_origem"], e.data[1]["extra_nome"], e.data[1]["extra_cpf"], e.data[1]["extra_rg"], e.data[1]["extra_nacionalidade"], e.data[1]["extra_profissao"], e.data[1]["extra_renda"], e.data[1]["observacoes"]);
                 postMessage(["Cliente criado com sucesso", e.data[0], "form_success"]);
+                break;
+            case 'getAllClientesShort':
+                var ret = getAllClientesShort();
+                postMessage([ret, e.data[0], "json"]);
                 break;
             case 'getAllClientes':
                 var ret = getAllClientes();
