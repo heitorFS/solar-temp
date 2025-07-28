@@ -33,7 +33,7 @@ namespace origens
             origem_companhia.id = id_companhia;
         }
 
-        origem(sqlite3_stmt* stmt)
+        origem(query_type _,sqlite3_stmt* stmt)
         {
             origem_companhia = companhia();
 
@@ -46,7 +46,8 @@ namespace origens
         origem() {}
 
         static string get_table(bool select) { if (select) return "origens INNER JOIN companhias ON id_companhia = companhias.id"; return "origens"; }
-        static string get_fields(bool select) {
+        static string get_fields(bool select)
+        {
             if (select) return "origens.id, origens.nome, companhias.id, companhias.nome";
             return "nome, id_companhia";
         }

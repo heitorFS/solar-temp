@@ -6,6 +6,15 @@
 #include <string>
 
 using namespace std;
+enum query_type
+{
+    INSERT = 0,
+    UPDATE = 0,
+    DELETE = 0,
+    VALIDATE = 0,
+    SELECT_FULL = 1,
+    SELECT_SHORT
+};
 
 template <int N, typename ...T>
 decltype(auto) get_argument(const T&... t)
@@ -48,7 +57,7 @@ namespace crud
     }
 
     template <typename T>
-    string read(string* extra = NULL)
+    string read(string* extra = NULL, query_type type = SELECT_FULL)
     {
         sqlite3* db;
         sqlite3_open("C:/AEnAzume/database.db", &db);
@@ -56,12 +65,12 @@ namespace crud
         auto q_array = json::array();
         sqlite3_stmt* stmt;
         string sql = 
-            fmt::format("SELECT {} FROM {} {}", T::get_fields(SELECT), T::get_table(SELECT), extra != NULL ? *extra : "");
+            fmt::format("SELECT {} FROM {} {}", T::get_fields(type), T::get_table(type), extra != NULL ? *extra : "");
 
         int step = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
         while ((step = sqlite3_step(stmt)) == SQLITE_ROW)
         {
-            q_array.push_back(T(stmt));
+            q_array.push_back(T(type, stmt));
         }
 
         sqlite3_finalize(stmt);
@@ -76,8 +85,8 @@ namespace crud
         sqlite3* db;
         sqlite3_open("C:/AEnAzume/database.db", &db);
 
-        string sql = fmt::format("UPDATE {} SET", T::get_table(INSERT)), query = " {} = '{}',";
-        formatQuery(sql, query, T::get_table(INSERT), forward<Args>(args)...);
+        string sql = fmt::format("UPDATE {} SET", T::get_table(UPDATE)), query = " {} = '{}',";
+        formatQuery(sql, query, T::get_table(UPDATE), forward<Args>(args)...);
         sql += fmt::format(" WHERE id = {}", id);
 
         sqlite3_exec(db, sql.c_str(), close_connection, db, NULL);

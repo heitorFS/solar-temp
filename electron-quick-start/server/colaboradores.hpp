@@ -40,11 +40,11 @@ namespace colaboradores
             cpf_cnpj = _cpf_cnpj;
         }
 
-        colaborador(sqlite3_stmt* stmt)
+        colaborador(query_type _, sqlite3_stmt* stmt)
         {
             id = sqlite3_column_int(stmt, 0);
             nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
-            id_cargo = sqlite3_column_int(stmt, 2);
+            id_cargo = (cargo)sqlite3_column_int(stmt, 2);
             email = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 3)));
             telefone = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 4)));
             cpf_cnpj = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 5)));
@@ -53,7 +53,8 @@ namespace colaboradores
         colaborador(){}
 
         static string get_table(bool select) { return "colaboradores"; }
-        static string get_fields(bool select) {
+        static string get_fields(bool select)
+        {
             if (select) return "*";
             return "nome, id_cargo, email, telefone, cpf_cnpj";
         }

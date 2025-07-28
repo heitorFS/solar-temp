@@ -23,7 +23,7 @@ namespace companhias
         companhia(string _nome)
             : nome(_nome) {}
 
-        companhia(sqlite3_stmt* stmt)
+        companhia(query_type _,sqlite3_stmt* stmt)
         {
             id = sqlite3_column_int(stmt, 0);
             nome = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 1)));
@@ -32,7 +32,8 @@ namespace companhias
         companhia(){}
 
         static string get_table(bool select) { return "companhias"; }
-        static string get_fields(bool select) {
+        static string get_fields(bool select)
+        {
             if (select) return "*";
             return "nome";
         }
