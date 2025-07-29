@@ -3,6 +3,10 @@ const {
     createCliente, getAllClientes, getAllClientesShort, getCliente, updateCliente, deleteCliente,
     createColaborador, getColaborador, getAllColaboradores, updateColaborador, deleteColaborador,
     createCompanhia, getCompanhia, getAllCompanhias, updateCompanhia, deleteCompanhia,
+    createInversor, getInversor, getInversoresByKit, getAllInversores, updateInversor, deleteInversor, deleteInversoresByKit,
+    createItem, getItem, getItensByKit, getAllItens, updateItem, deleteItem, deleteItensByKit,
+    createKit, getKit, getAllKits, updateKit, deleteKit,
+    createModulo, getModulo, getModulosByKit, getAllModulos, updateModulo, deleteModulo, deleteModulosByKit,
     createOrigem, getOrigem, getAllOrigens, deleteOrigem } = require('./build/Release/cppserver.node');
 
 const htopdf = require('html-pdf-node');
@@ -86,6 +90,68 @@ onmessage = (e) => {
                 break;
             // endregion Colaborador
 
+            // region Inversor
+            case 'createInversor':
+                createInversor(e.data[1]["id_kit"], e.data[1]["marca"], e.data[1]["modelo"], e.data[1]["id_monitoramento"], e.data[1]["potencia"], e.data[1]["quantidade"], e.data[1]["garantia"], e.data[1]["microinversor"]);
+                postMessage(["Inversor criado com sucesso", e.data[0], "void"]);
+                break;
+            case 'getInversoresByKit':
+                getInversoresByKit(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getAllInversores':
+                var ret = getAllInversores();
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getInversor':
+                var ret = getInversor(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'updateInversor':
+                updateInversor(e.data[1]["id"], e.data[1]["marca"], e.data[1]["modelo"], e.data[1]["id_monitoramento"], e.data[1]["potencia"], e.data[1]["quantidade"], e.data[1]["garantia"], e.data[1]["microinversor"]);
+                postMessage(["Inversor atualizado com sucesso", e.data[0], "void"]);
+                break;
+            case 'deleteInversor':
+                deleteInversor(e.data[1]);
+                postMessage(["Inversor removido com sucesso", e.data[0], "success"]);
+                break;
+            case 'deleteInversoresByKit':
+                deleteInversoresByKit(e.data[1]);
+                postMessage(["Inversor removido com sucesso", e.data[0], "none"]);
+                break;
+            // endregion Inversor
+
+            // region Item
+            case 'createItem':
+                createItem(e.data[1]["id_kit"], e.data[1]["nome"], e.data[1]["quantidade"], e.data[1]["fabricante"], e.data[1]["detalhe"]);
+                postMessage(["Item criado com sucesso", e.data[0], "void"]);
+                break;
+            case 'getItensByKit':
+                getItensByKit(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getAllItens':
+                var ret = getAllItens();
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getItem':
+                var ret = getItem(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'updateItem':
+                updateItem(e.data[1]["id"], e.data[1]["nome"], e.data[1]["quantidade"], e.data[1]["fabricante"], e.data[1]["detalhe"]);
+                postMessage(["Item atualizado com sucesso", e.data[0], "void"]);
+                break;
+            case 'deleteItem':
+                deleteItem(e.data[1]);
+                postMessage(["Item removido com sucesso", e.data[0], "success"]);
+                break;
+            case 'deleteItensByKit':
+                deleteItensByKit(e.data[1]);
+                postMessage(["Item removido com sucesso", e.data[0], "none"]);
+                break;
+            // endregion Item
+
             // region Companhia
             case 'createCompanhia':
                 createCompanhia(e.data[1]);
@@ -108,6 +174,60 @@ onmessage = (e) => {
                 postMessage(["Companhia removido com sucesso", e.data[0], "success"]);
                 break;
             // endregion Companhia
+
+            // region Kit
+            case 'createKit':
+                var id = createKit(e.data[1]["fornecedor"], e.data[1]["valor"], e.data[1]["tensao"], e.data[1]["fixacao"], e.data[1]["observacoes"]);
+                postMessage([id, e.data[0], "create_id"]);
+                break;
+            case 'getAllKits':
+                var ret = getAllKits();
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getKit':
+                var ret = getKit(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'updateKit':
+                updateKit(e.data[1]["id"], e.data[1]["fornecedor"], e.data[1]["valor"], e.data[1]["tensao"], e.data[1]["fixacao"], e.data[1]["observacoes"]);
+                postMessage(["Kit atualizado com sucesso", e.data[0], "form_success"]);
+                break;
+            case 'deleteKit':
+                deleteKit(e.data[1]);
+                postMessage(["Kit removido com sucesso", e.data[0], "success"]);
+                break;
+            // endregion Kit
+
+            // region Modulo
+            case 'createModulo':
+                createModulo(e.data[1]["id_kit"], e.data[1]["potencia"], e.data[1]["marca"], e.data[1]["quantidade"], e.data[1]["peso"], e.data[1]["comprimento"], e.data[1]["largura"], e.data[1]["garantia_defeito"], e.data[1]["garantia_eficiencia"]);
+                postMessage(["Modulo criado com sucesso", e.data[0], "void"]);
+                break;
+            case 'getModulosByKit':
+                getModulosByKit(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getAllModulos':
+                var ret = getAllModulos();
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'getModulo':
+                var ret = getModulo(e.data[1]);
+                postMessage([ret, e.data[0], "json"]);
+                break;
+            case 'updateModulo':
+                updateModulo(e.data[1]["id"], e.data[1]["potencia"], e.data[1]["marca"], e.data[1]["quantidade"], e.data[1]["peso"], e.data[1]["comprimento"], e.data[1]["largura"], e.data[1]["garantia_defeito"], e.data[1]["garantia_eficiencia"]);
+                postMessage(["Modulo atualizado com sucesso", e.data[0], "void"]);
+                break;
+            case 'deleteModulo':
+                deleteModulo(e.data[1]);
+                postMessage(["Modulo removido com sucesso", e.data[0], "success"]);
+                break;
+            case 'deleteModulosByKit':
+                deleteModulosByKit(e.data[1]);
+                postMessage(["Modulo removido com sucesso", e.data[0], "none"]);
+                break;
+            // endregion Modulo
 
             // region Origem
             case 'createOrigem':

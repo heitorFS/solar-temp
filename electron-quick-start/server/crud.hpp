@@ -112,7 +112,7 @@ namespace crud
     }
 
     template <typename T>
-    void remove(field<int>& _field)
+    void remove(field<size_t>& _field)
     {
         sqlite3* db;
         int err = sqlite3_open("C:/AEnAzume/database.db", &db);

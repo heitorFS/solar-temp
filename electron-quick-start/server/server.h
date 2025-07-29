@@ -1,6 +1,7 @@
 #include "clientes.hpp"
 #include "colaboradores.hpp"
 #include "companhias.hpp"
+#include "kits.hpp"
 #include "origens.hpp"
 
 #include <sqlite3.h>
@@ -21,7 +22,6 @@
 using namespace std;
 
 namespace server {
-
     template <int N, typename ...T>
     decltype(auto) get_argument(const T&... t);
 
