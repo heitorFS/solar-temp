@@ -200,6 +200,7 @@ $('form').submit((e) => {
 });
 
 if (!!alterObj) {
+    $('.form-title').html('Alterar Cliente');
     $('#id').attr('value', alterObj.id);
     $('#nome').attr('value', alterObj.nome);
     $('#email').attr('value', alterObj.email);

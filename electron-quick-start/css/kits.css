@@ -1,0 +1,36 @@
+.kit-card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 50px;
+    row-gap: 30px;
+}
+
+.kit-card {
+    width: 100%;
+    padding: 20px;
+    background-color: #FFF;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: 75px 1fr;
+    column-gap: 30px;
+}
+
+.kit-card-values {    
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    row-gap: 10px;
+    column-gap: 20px;
+    padding: 0 20px;
+}
+
+.kit-card-title {    
+    font-size: 14pt;
+    font-weight: 500;
+    color: #10375C;
+}
+
+.kit-card-info {    
+    font-size: 14pt;
+    text-align: end;
+    max-width: 300px;
+}

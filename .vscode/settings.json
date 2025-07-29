@@ -100,7 +100,8 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "kits": "c"
     },
     "cmake.sourceDirectory": "C:/Users/heito/Documents/projects/solar-temp/electron-quick-start",
     "cmake.configureArgs": [

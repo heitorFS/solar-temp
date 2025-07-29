@@ -21,6 +21,8 @@ let openFile;
 let openFolder;
 let deleteFile;
 
+let onChange;
+
 const telephoneMasks = ['(00) 0000-0000Z', '(00) 00000-0000'];
 let telephoneOptions;
 
@@ -151,12 +153,12 @@ const openConfig = (title, id) => {
 
     openModal(title, mod);
     invokeWorker(`getAll${id}`, null, allRows);
-}
+};
 
 const formatDate = (date) => {
     let arr = date.split('-');
     return `${arr[2]}/${arr[1]}/${arr[0]}`;
-}
+};
 
 const formatMoney = (money) => {
     if (money % 1 === 0)
@@ -165,7 +167,7 @@ const formatMoney = (money) => {
         return money + '0';
     else
         return money;
-}
+};
 
 const formatData = (data) => {
     let i = 0;
@@ -186,19 +188,23 @@ const formatData = (data) => {
         default:
             return 'TOO_BIG';
     }
-}
+};
+
+const formatWp = (wp) => {
+    return ((Math.round(wp / 10) / 100).toFixed(2)).replace('.', ',');
+};
 
 const getCargo = (id) => {
     switch (id) {
-        case 1:
+        case 0:
             return 'Vendedor';
-        case 2:
+        case 1:
             return 'Projetista';
-        case 3:
+        case 2:
             return 'Instalador';
-        case 4:
+        case 3:
             return 'Financeiro';
-        case 5:
+        case 4:
             return 'Administrativo';
     }
 };
@@ -206,17 +212,72 @@ const getCargo = (id) => {
 const getCargoId = (cargo) => {
     switch (cargo) {
         case 'Vendedor':
-            return 1;
+            return 0;
         case 'Projetista':
-            return 2;
+            return 1;
         case 'Instalador':
-            return 3;
+            return 2;
         case 'Financeiro':
-            return 4;
+            return 3;
         case 'Administrativo':
-            return 5;
+            return 4;
     }
-}
+};
+
+const getTensao = (tensao) => {
+    switch (tensao) {
+        case 0:
+            return '127V';
+        case 1:
+            return '220V';
+        case 2:
+            return '380V';
+    }
+};
+
+const getFixacao = (fixacao) => {
+    switch (fixacao) {
+        case 0:
+            return 'Cerâmica';
+        case 1:
+            return 'Metálica Trapezoidal';
+        case 2:
+            return 'Metálica Ondulada';
+        case 3:
+            return 'Metálica 55cm';
+        case 4:
+            return 'Fibrocimento Est. Madeira';
+        case 5:
+            return 'Fibrocimento Est. Metálica';
+        case 6:
+            return 'Laje';
+        case 7:
+            return 'Solo';
+        case 8:
+            return 'Mini Trilho';
+        case 9:
+            return 'Kalhetão';
+        case 10:
+            return 'Americano';
+        case 11:
+            return 'Carport';
+        case 12:
+            return 'Zipado';
+        case 13:
+            return 'Sem Estrutura';
+    }
+};
+
+const getMonitoramento = (monitoramento) => {
+    switch (monitoramento) {
+        case 0:
+            return 'Wi-Fi';
+        case 1:
+            return '4G';
+        case 2:
+            return 'Sem Monitoramento';
+    }
+};
 
 const getPopup = (text, type) => {    
     let popup = `<div class="popup popup-${type}" data-id="${popupCount}">
@@ -280,7 +341,15 @@ const getMasked = (type, val) => {
             }
             return ret; 
     }
-}
+};
+
+const openActionsMenu = (event) => {
+    let menu = $('.table-card-actions-menu');
+    menu.css('display', 'block');
+    menu.css('top', event.pageY);
+    menu.css('left', event.pageX);
+    menu[0].children[0].textContent = event.currentTarget.parentElement.children[0].textContent;
+};
 
 // endregion Function declaration
 
@@ -296,6 +365,7 @@ worker.onmessage = function(event) {
             callback[event.data[1]](JSON.parse(event.data[0]));
             break;
         case 'error':
+            debugger;
             callback[event.data[1]](JSON.parse(event.data[0].message), 'error');
             break;
         case 'form_success':
@@ -311,6 +381,8 @@ worker.onmessage = function(event) {
         case 'void':
             callback[event.data[1]]();
             break;
+        case 'none':
+            return;
         default:
             showPopup(event.data[0], event.data[2]);
             return;

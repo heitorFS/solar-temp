@@ -1,0 +1,35 @@
+<div class="view">
+    <div class="view-sidebar">
+        <div class="property-title">Fornecedor</div>
+        <div id="fornecedor" class="property-value"></div>
+        <div class="property-title">Valor</div>
+        <span class="property-value">R$<span id="valor"></span></span>
+        <div class="property-title">Tensão</div>
+        <div id="tensao" class="property-value"></div>
+        <div class="property-title">Fixação</div>
+        <div id="fixacao" class="property-value"></div>
+        <div class="property-title">Observações</div>
+        <div id="observacoes" class="property-value"></div>
+    </div>
+    <div class="view-content-container">
+        <div class="view-tabs">
+            <div id="modulos" class="view-tab tab-selected" onclick="switchTab('modulos')">
+                <div class="view-tab-icon"><i class="fa-solid fa-solar-panel"></i></div>
+                <span>Módulos</span>
+            </div>
+            <div id="inversores" class="view-tab" onclick="switchTab('inversores')">
+                <div class="view-tab-icon"><i class="fa-solid fa-bolt"></i></div>
+                <span>Inversores</span>
+            </div>
+            <div id="itens" class="view-tab" onclick="switchTab('itens')">
+                <div class="view-tab-icon"><i class="fa-solid fa-box-open"></i></div>
+                <span>Itens</span>
+            </div>
+        </div>
+        <div class="view-content">
+            
+        </div>
+        <div id="loader-container" class="background-fade"><div class="loader"></div></div>
+    </div>
+</div>
+<script src="js/verKit.js"></script>

@@ -96,6 +96,7 @@ $('form').submit((e) => {
 });
 
 if (!!alterObj) {
+  $('.form-title').html('Alterar Colaborador');
   $('#id').attr('value', alterObj.id);
   $('#nome').attr('value', alterObj.nome);
   $('#id_cargo')[0].value = alterObj.id_cargo;

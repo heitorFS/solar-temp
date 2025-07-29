@@ -19,5 +19,5 @@ function closeModal() {
 }
 
 $('document').ready(function () {
-    switchScreen('meusClientes');
+    switchScreen('meusKits');
 });

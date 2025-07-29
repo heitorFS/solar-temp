@@ -1,0 +1,80 @@
+<div class="form-container">
+    <form class="form">
+        <input id="id" value="0" hidden />
+        <div class="form-title">Novo Kit</div>
+        <div class="col-1fr-1fr">
+            <div class="field">
+                <label>Fornecedor</label>
+                <input id="fornecedor" type="text" required />
+            </div>
+            <div class="field">
+                <label>Valor</label>
+                <input id="valor" type="text" placeholder="0,00" required />
+            </div>
+        </div>
+        <hr />
+        <div class="form-division">Dados Adicionais</div>
+        <div class="col-1fr-1fr">
+            <div class="field">
+                <label>Tensão</label>
+                <select id="id_tensao" required>
+                    <option value="0">127V</option>
+                    <option value="1">220V</option>
+                    <option value="2">380V</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Fixação</label>
+                <select id="id_fixacao" required>
+                    <option value="0">Cerâmica</option>
+                    <option value="1">Metálica Trapezoidal</option>
+                    <option value="2">Metálica Ondulada</option>
+                    <option value="3">Metálica 55cm</option>
+                    <option value="4">Fibrocimento Est. Madeira</option>
+                    <option value="5">Fibrocimento Est. Metálica</option>
+                    <option value="6">Laje</option>
+                    <option value="7">Solo</option>
+                    <option value="8">Mini Trilho</option>
+                    <option value="9">Kalhetão</option>
+                    <option value="10">Americano</option>
+                    <option value="11">Carport</option>
+                    <option value="12">Zipado</option>
+                    <option value="13">Sem estrutura</option>
+                </select>
+            </div>
+        </div>
+        <hr />
+        <div class="form-division">Módulos fotovoltaicos</div>
+        <div id="modulos">
+
+        </div>
+        <div class="col-1fr-1fr">
+            <button id="add-modulo" class="item-op add-item" type="button">+ Módulo</button>
+            <button id="remove-modulo" class="item-op remove-item op-disabled" type="button">- Módulo</button>
+        </div>
+        <hr />
+        <div class="form-division">Inversores</div>
+        <div id="inversores">
+
+        </div>
+        <div class="col-1fr-1fr">
+            <button id="add-inversor" class="item-op add-item" type="button">+ Inversor</button>
+            <button id="remove-inversor" class="item-op remove-item op-disabled" type="button">- Inversor</button>
+        </div>
+        <hr />
+        <div class="form-division">Itens Complementares</div>
+        <div id="itens">
+            
+        </div>
+        <div class="col-1fr-1fr">
+            <button id="add-item" class="item-op add-item" type="button">+ Item</button>
+            <button id="remove-item" class="item-op remove-item op-disabled" type="button">- Item</button>
+        </div>
+        <div class="field">
+            <label>Observações</label>
+            <textarea id="observacoes"></textarea>
+        </div>
+        <button class="submit" type="submit">Salvar Kit</button>
+    </form>
+</div>
+<script src="js/novoKit.js"></script>

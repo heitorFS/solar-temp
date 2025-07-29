@@ -8,6 +8,7 @@
     <link href="./css/clientes.css" rel="stylesheet">
     <link href="./css/colaboradores.css" rel="stylesheet">
     <link href="./css/configuracoes.css" rel="stylesheet">
+    <link href="./css/kits.css" rel="stylesheet">
     <title>Hello World!</title>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/jquery.mask.min.js"></script>
@@ -54,13 +55,27 @@
           <span>PROPOSTAS</span>
         </div>
         <div class="sidebar-menu" data-id="propostas">
-          <div class="sidebar-suboption" onclick="switchScreen('criarProposta')">
+          <div class="sidebar-suboption" onclick="switchScreen('minhasPropostas')">
             <i class="fa-solid fa-table-list"></i>
             <span>Minhas propostas</span>
           </div>
-          <div class="sidebar-suboption" onclick="switchScreen('minhasPropostas')">
+          <div class="sidebar-suboption" onclick="switchScreen('criarProposta')">
             <i class="fa-solid fa-square-plus"></i>
             <span>Nova Proposta</span>
+          </div>
+        </div>
+        <div class="sidebar-option" onclick="openMenu('kits')">
+          <i class="fa-solid fa-solar-panel"></i>
+          <span>KITS</span>
+        </div>
+        <div class="sidebar-menu" data-id="kits">
+          <div class="sidebar-suboption" onclick="switchScreen('meusKits')">
+            <i class="fa-solid fa-table-list"></i>
+            <span>Meus Kits</span>
+          </div>
+          <div class="sidebar-suboption" onclick="switchScreen('criarKit')">
+            <i class="fa-solid fa-square-plus"></i>
+            <span>Novo Kit</span>
           </div>
         </div>
         <div class="sidebar-option" onclick="openMenu('minha-conta')">
