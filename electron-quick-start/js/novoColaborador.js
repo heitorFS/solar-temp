@@ -73,7 +73,7 @@ $('form').submit((e) => {
         for (const i in data)
         {
           message += `${(data[i] === 'cpf_cnpj' ? $(`#cpf_cnpj`).cleanVal().length === 11 ? 'CPF' : 'CNPJ' : data[i])}${i == data.length - 1 ? '' : '; '}`;
-          $(`#${data[i]}`).css('border-color', '#F00');
+          $(`#${data[i].name}`).css('border-color', '#F00');
         }
         showPopup(`${message}.`, 'error');
       }
