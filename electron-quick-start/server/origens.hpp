@@ -68,6 +68,15 @@ namespace origens
         };
     }
 
+    void from_json(const nlohmann::json& j, origem& obj)
+    {
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+
+        j.at("nome").get_to(obj.nome);
+        j.at("id_companhia").get_to(obj.origem_companhia.id);
+    }
+
     #pragma endregion JSON serialization
 
     #pragma region operations
@@ -94,14 +103,12 @@ namespace origens
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 2 || !info[0].IsString() || !info[1].IsNumber())
+        if (info.Length() < 1 || !info[0].IsString())
             Napi::TypeError::New(env, "nome::String, id::Number")
                 .ThrowAsJavaScriptException();
 
-        origem _origem(
-            remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[1].As<Napi::Number>().Int32Value()
-        ); 
+        origem _origem = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<origem>();
 
         json errs = json::array({});
         if (!validate_letters(_origem.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
@@ -129,7 +136,10 @@ namespace origens
         json errs = json::array({});
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, "origens", field<size_t>("id", id)))
+        {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+            return Napi::Boolean::New(env, false);
+        }
 
         crud::remove<origem>(field<size_t>("id", id));
         return Napi::Boolean::New(env, true);

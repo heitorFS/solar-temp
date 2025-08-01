@@ -100,6 +100,8 @@ namespace kits
             }
         }
 
+        kit(){}
+
         static string get_table(query_type select)
         {
             switch (select)
@@ -187,7 +189,7 @@ namespace kits
 
     #pragma region kit JSON serialization
 
-    void to_json(nlohmann::json& j, kit& obj)
+    void to_json(nlohmann::json& j, const kit& obj)
     {
         j = 
         {
@@ -199,6 +201,18 @@ namespace kits
                 { "valor_kw", obj.short_return.valor_kw }
             }}
         };
+    }
+
+    void from_json(const nlohmann::json& j, kit& obj)
+    {
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+            
+        j.at("fornecedor").get_to(obj.fornecedor);
+        j.at("valor").get_to(obj.valor);
+        j.at("tensao").get_to(obj.id_tensao);
+        j.at("fixacao").get_to(obj.id_fixacao);
+        j.at("observacoes").get_to(obj.observacoes);
     }
 
     #pragma endregion kit JSON serialization
@@ -228,17 +242,12 @@ namespace kits
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 5 || !info[0].IsString() || !info[1].IsNumber() || !info[2].IsNumber() || !info[3].IsNumber() || !info[4].IsString())
+        if (info.Length() < 1 || !info[0].IsString())
             Napi::TypeError::New(env, "fornecedor::String, id_tensao::Number, id_fixacao::Number, observacoes::String")
                 .ThrowAsJavaScriptException();
 
-        kit _kit(
-            remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[1].As<Napi::Number>().DoubleValue(),
-            info[2].As<Napi::Number>().Int32Value(),
-            info[3].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE)
-        );
+        kit _kit = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<kit>();
         
         json errs = json::array({});
         if (_kit.id_tensao < 0 || _kit.id_tensao > 2) errs.push_back(field_error("id_tensao", field_error_code::INVALID_FIELD));
@@ -258,18 +267,12 @@ namespace kits
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 6 || !info[0].IsNumber() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsNumber() || !info[4].IsNumber() || !info[5].IsString())
+        if (info.Length() < 1 || !info[0].IsNumber())
             Napi::TypeError::New(env, "fornecedor::String, id_tensao::Number, id_fixacao::Number, observacoes::String")
                 .ThrowAsJavaScriptException();
 
-        kit _kit(
-            info[0].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[2].As<Napi::Number>().DoubleValue(),
-            info[3].As<Napi::Number>().Int32Value(),
-            info[4].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[5].As<Napi::String>().Utf8Value(), DUPLICATE)
-        );
+        kit _kit = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<kit>();
 
         crud::update<kit>(_kit.id, field<string>("fornecedor", _kit.fornecedor), field<double>("valor", _kit.valor), field<int>("tensao", (int)_kit.id_tensao),
             field<int>("fixacao", _kit.id_fixacao), field<string>("observacoes", _kit.observacoes));
@@ -287,7 +290,10 @@ namespace kits
         json errs = json::array({});
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, kit::get_table(DELETE), field<size_t>("id", id)))
+        {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+            return Napi::Boolean::New(env, false);
+        }
         crud::remove<kit>(field<size_t>("id", id));
 
         return Napi::Boolean::New(env, true);
@@ -334,6 +340,8 @@ namespace kits
                 garantia_eficiencia = sqlite3_column_int(stmt, 9);
             }
 
+            modulo(){}
+
             static string get_table(bool select) { return "modulos"; }
             static string get_fields(bool select)
             {
@@ -347,7 +355,7 @@ namespace kits
 
         #pragma region modulo JSON serialization
 
-        void to_json(nlohmann::json& j, modulo& obj)
+        void to_json(nlohmann::json& j, const modulo& obj)
         {
             j = 
             {
@@ -356,6 +364,22 @@ namespace kits
                 { "comprimento", obj.comprimento }, { "largura", obj.largura }, { "garantia_defeito", obj.garantia_eficiencia },
                 { "garantia_eficiencia", obj.garantia_eficiencia }
             };
+        }
+
+        void from_json(const nlohmann::json& j, modulo& obj)
+        {
+            if (j.contains("id"))
+                j.at("id").get_to(obj.id);
+            
+            j.at("id_kit").get_to(obj.id_kit);
+            j.at("potencia").get_to(obj.potencia);
+            j.at("marca").get_to(obj.marca);
+            j.at("quantidade").get_to(obj.quantidade);
+            j.at("peso").get_to(obj.peso);
+            j.at("comprimento").get_to(obj.comprimento);
+            j.at("largura").get_to(obj.largura);
+            j.at("garantia_defeito").get_to(obj.garantia_defeito);
+            j.at("garantia_eficiencia").get_to(obj.garantia_eficiencia);
         }
 
         #pragma endregion modulo JSON serialization
@@ -397,21 +421,12 @@ namespace kits
         {
             Napi::Env env = info.Env();
 
-            if (info.Length() < 9 || !info[0].IsNumber() || !info[1].IsNumber() || !info[2].IsString() || !info[3].IsNumber() || !info[4].IsNumber() || !info[5].IsNumber() || !info[6].IsNumber() || !info[7].IsNumber() || !info[8].IsNumber())
+            if (info.Length() < 1 || !info[0].IsNumber())
                 Napi::TypeError::New(env, "id_kit::Number, potencia::Number, marca::String, quantidade::Number, peso::Number, comprimento::Number, largura::Number, garantia_defeito::Number, garantia_eficiencia::Number")
                     .ThrowAsJavaScriptException();
 
-            modulo _modulo(
-                info[0].As<Napi::Number>().Int32Value(),
-                info[1].As<Napi::Number>().Int32Value(),
-                remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
-                info[3].As<Napi::Number>().Int32Value(),
-                info[4].As<Napi::Number>().FloatValue(),
-                info[5].As<Napi::Number>().Int32Value(),
-                info[6].As<Napi::Number>().Int32Value(),
-                info[7].As<Napi::Number>().Int32Value(),
-                info[8].As<Napi::Number>().Int32Value()
-            );
+            modulo _modulo = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+                .template get<modulo>();
 
             int64_t id = crud::create<modulo>(_modulo.id_kit, _modulo.potencia, _modulo.marca, _modulo.quantidade, _modulo.peso, _modulo.comprimento, _modulo.largura, _modulo.garantia_defeito, _modulo.garantia_eficiencia);
             return Napi::Number::New(env, (double)id);
@@ -421,22 +436,12 @@ namespace kits
         {
             Napi::Env env = info.Env();
 
-            if (info.Length() < 9 || !info[0].IsNumber() || !info[1].IsNumber() || !info[2].IsString() || !info[3].IsNumber() || !info[4].IsNumber() || !info[5].IsNumber() || !info[6].IsNumber() || !info[7].IsNumber() || !info[8].IsNumber())
+            if (info.Length() < 1 || !info[0].IsNumber())
                 Napi::TypeError::New(env, "id::Number, potencia::Number, marca::String, quantidade::Number, peso::Number, comprimento::Number, largura::Number, garantia_defeito::Number, garantia_eficiencia::Number")
                     .ThrowAsJavaScriptException();
 
-            modulo _modulo(
-                info[0].As<Napi::Number>().Int64Value(),
-                0,
-                info[1].As<Napi::Number>().Int32Value(),
-                remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
-                info[3].As<Napi::Number>().Int32Value(),
-                info[4].As<Napi::Number>().FloatValue(),
-                info[5].As<Napi::Number>().Int32Value(),
-                info[6].As<Napi::Number>().Int32Value(),
-                info[7].As<Napi::Number>().Int32Value(),
-                info[8].As<Napi::Number>().Int32Value()
-            );
+            modulo _modulo = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+                .template get<modulo>();
             
             crud::update<modulo>(_modulo.id, field<int>("potencia", _modulo.potencia),
                 field<string>("marca", _modulo.marca), field<int>("quantidade", _modulo.quantidade), field<float>("peso", _modulo.peso),
@@ -456,7 +461,10 @@ namespace kits
             json errs = json::array({});
             size_t id = info[0].As<Napi::Number>().Int32Value();
             if (validate_unique(errs, modulo::get_table(DELETE), field<size_t>("id", id)))
+            {
                 Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+                return Napi::Boolean::New(env, false);
+            }
             crud::remove<modulo>(field<size_t>("id", id));
 
             return Napi::Boolean::New(env, true);
@@ -473,7 +481,10 @@ namespace kits
             json errs = json::array({});
             size_t id = info[0].As<Napi::Number>().Int32Value();
             if (validate_unique(errs, modulo::get_table(DELETE), field<size_t>("id_kit", id)))
+            {
                 Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+                return Napi::Boolean::New(env, false);
+            }
             crud::remove<modulo>(field<size_t>("id_kit", id));
 
             return Napi::Boolean::New(env, true);
@@ -526,6 +537,8 @@ namespace kits
                 microinversor = sqlite3_column_int(stmt, 8);
             }
 
+            inversor(){}
+
             static string get_table(bool select) { return "inversores"; }
             static string get_fields(bool select)
             {
@@ -539,7 +552,7 @@ namespace kits
 
         #pragma region inversor JSON serialization
 
-        void to_json(nlohmann::json& j, inversor& obj)
+        void to_json(nlohmann::json& j, const inversor& obj)
         {
             j = 
             {
@@ -547,6 +560,21 @@ namespace kits
                 { "modelo", obj.modelo }, { "monitoramento", obj.id_monitoramento }, { "potencia", obj.potencia },
                 { "quantidade", obj.quantidade }, { "garantia", obj.garantia }, { "microinversor", obj.microinversor }
             };
+        }
+
+        void from_json(const nlohmann::json& j, inversor& obj)
+        {
+            if (j.contains("id"))
+                j.at("id").get_to(obj.id);
+                
+            j.at("id_kit").get_to(obj.id_kit);
+            j.at("marca").get_to(obj.marca);
+            j.at("modelo").get_to(obj.modelo);
+            j.at("monitoramento").get_to(obj.id_monitoramento);
+            j.at("potencia").get_to(obj.potencia);
+            j.at("quantidade").get_to(obj.quantidade);
+            j.at("garantia").get_to(obj.garantia);
+            j.at("microinversor").get_to(obj.microinversor);
         }
 
         #pragma endregion inversor JSON serialization
@@ -588,20 +616,12 @@ namespace kits
         {
             Napi::Env env = info.Env();
 
-            if (info.Length() < 8 || !info[0].IsNumber() || !info[1].IsString() || !info[2].IsString() || !info[3].IsNumber() || !info[4].IsNumber() || !info[5].IsNumber() || !info[6].IsNumber() || !info[7].IsNumber())
+            if (info.Length() < 1 || !info[0].IsString())
                 Napi::TypeError::New(env, "id_kit::Number, marca::String, modelo::String, id_monitoramento::Number, potencia::Number, quantidade::Number, garantia::Number, microinversor::Number")
                     .ThrowAsJavaScriptException();
 
-            inversor _inversor(
-                info[0].As<Napi::Number>().Int32Value(),
-                remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-                remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
-                info[3].As<Napi::Number>().Int32Value(),
-                info[4].As<Napi::Number>().Int32Value(),
-                info[5].As<Napi::Number>().Int32Value(),
-                info[6].As<Napi::Number>().Int32Value(),
-                info[7].As<Napi::Number>().Int32Value()
-            );
+            inversor _inversor = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+                .template get<inversor>();
 
             int64_t id = crud::create<inversor>(_inversor.id_kit, _inversor.marca, _inversor.modelo, (int)_inversor.id_monitoramento, _inversor.potencia, _inversor.quantidade, _inversor.garantia, (int)_inversor.microinversor);
             return Napi::Number::New(env, (double)id);
@@ -611,21 +631,12 @@ namespace kits
         {
             Napi::Env env = info.Env();
 
-            if (info.Length() < 8 || !info[0].IsNumber() || !info[1].IsString() || !info[2].IsString() || !info[3].IsNumber() || !info[4].IsNumber() || !info[5].IsNumber() || !info[6].IsNumber() || !info[7].IsBoolean())
+            if (info.Length() < 1 || !info[0].IsString())
                 Napi::TypeError::New(env, "id::Number, marca::String, modelo::String, id_monitoramento::Number, potencia::Number, quantidade::Number, garantia::Number, microinversor::Boolean")
                     .ThrowAsJavaScriptException();
 
-            inversor _inversor(
-                info[0].As<Napi::Number>().Int32Value(),
-                0,
-                remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-                remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
-                info[3].As<Napi::Number>().Int32Value(),
-                info[4].As<Napi::Number>().Int32Value(),
-                info[5].As<Napi::Number>().Int32Value(),
-                info[6].As<Napi::Number>().Int32Value(),
-                info[7].As<Napi::Boolean>().Value()
-            );
+            inversor _inversor = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+                .template get<inversor>();
 
             crud::update<inversor>(_inversor.id, field<string>("marca", _inversor.marca),
                 field<string>("modelo", _inversor.modelo), field<int>("id_monitoramento", (int)_inversor.id_monitoramento), field<int>("potencia", _inversor.potencia),
@@ -644,7 +655,10 @@ namespace kits
             json errs = json::array({});
             size_t id = info[0].As<Napi::Number>().Int32Value();
             if (validate_unique(errs, inversor::get_table(DELETE), field<size_t>("id", id)))
+            {
                 Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+                return Napi::Boolean::New(env, false);
+            }
             crud::remove<inversor>(field<size_t>("id", id));
 
             return Napi::Boolean::New(env, true);
@@ -661,7 +675,10 @@ namespace kits
             json errs = json::array({});
             size_t id = info[0].As<Napi::Number>().Int32Value();
             if (validate_unique(errs, inversor::get_table(DELETE), field<size_t>("id", id)))
+            {
                 Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+                return Napi::Boolean::New(env, false);
+            }
             crud::remove<inversor>(field<size_t>("id_kit", id));
 
             return Napi::Boolean::New(env, true);
@@ -701,6 +718,8 @@ namespace kits
                 detalhes = reinterpret_cast<char*>(const_cast<unsigned char*>(sqlite3_column_text(stmt, 5)));
             }
 
+            item(){}
+
             static string get_table(bool select) { return "itens"; }
             static string get_fields(bool select)
             {
@@ -714,13 +733,25 @@ namespace kits
 
         #pragma region item JSON serialization
 
-        void to_json(nlohmann::json& j, item& obj)
+        void to_json(nlohmann::json& j, const item& obj)
         {
             j = 
             {
                 { "id", obj.id }, { "id_kit", obj.id_kit }, { "nome", obj.nome },
                 { "quantidade", obj.quantidade }, { "fabricante", obj.fabricante }, { "detalhes", obj.detalhes }
             };
+        }
+
+        void from_json(const nlohmann::json& j, item& obj)
+        {
+            if (j.contains("id"))
+                j.at("id").get_to(obj.id);
+                
+            j.at("id_kit").get_to(obj.id_kit);
+            j.at("nome").get_to(obj.nome);
+            j.at("quantidade").get_to(obj.quantidade);
+            j.at("fabricante").get_to(obj.fabricante);
+            j.at("detalhes").get_to(obj.detalhes);
         }
 
         #pragma endregion item JSON serialization
@@ -762,17 +793,12 @@ namespace kits
         {
             Napi::Env env = info.Env();
 
-            if (info.Length() < 5 || !info[0].IsNumber() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString())
+            if (info.Length() < 1 || !info[0].IsString())
                 Napi::TypeError::New(env, "id_kit::Number, nome::String, quantidade::Number, fabricante::String, detalhes::String")
                     .ThrowAsJavaScriptException();
 
-            item _item(
-                info[0].As<Napi::Number>().Int32Value(),
-                remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-                info[2].As<Napi::Number>().Int32Value(),
-                remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
-                remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE)
-            );
+            item _item = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+                .template get<item>();
 
             int64_t id = crud::create<item>(_item.id_kit, _item.nome, _item.quantidade, _item.fabricante, _item.detalhes);
             return Napi::Number::New(env, (double)id);
@@ -782,18 +808,12 @@ namespace kits
         {
             Napi::Env env = info.Env();
 
-            if (info.Length() < 5 || !info[0].IsNumber() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString())
+            if (info.Length() < 1 || !info[0].IsString())
                 Napi::TypeError::New(env, "id::Number, nome::String, quantidade::Number, fabricante::String, detalhes::String")
                     .ThrowAsJavaScriptException();
 
-            item _item(
-                info[0].As<Napi::Number>().Int32Value(),
-                0,
-                remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-                info[2].As<Napi::Number>().Int32Value(),
-                remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
-                remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE)
-            );
+            item _item = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+                .template get<item>();
 
             crud::update<item>(_item.id, field<string>("nome", _item.nome), field<int>("quantidade", _item.quantidade),
                 field<string>("fabricante", _item.fabricante), field<string>("detalhes", _item.detalhes));
@@ -811,7 +831,10 @@ namespace kits
             json errs = json::array({});
             size_t id = info[0].As<Napi::Number>().Int32Value();
             if (validate_unique(errs, item::get_table(DELETE), field<size_t>("id", id)))
+            {
                 Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+                return Napi::Boolean::New(env, false);
+            }
             crud::remove<item>(field<size_t>("id", id));
 
             return Napi::Boolean::New(env, true);
@@ -828,7 +851,10 @@ namespace kits
             json errs = json::array({});
             size_t id = info[0].As<Napi::Number>().Int32Value();
             if (validate_unique(errs, item::get_table(DELETE), field<size_t>("id", id)))
+            {
                 Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+                return Napi::Boolean::New(env, false);
+            }
             crud::remove<item>(field<size_t>("id_kit", id));
 
             return Napi::Boolean::New(env, true);

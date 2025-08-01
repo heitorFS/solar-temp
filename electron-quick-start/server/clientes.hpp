@@ -101,6 +101,8 @@ namespace clientes
             }
         }
 
+        cliente(){}
+
         static string get_table(bool select) { if (select) return "(clientes INNER JOIN colaboradores ON clientes.id_proprietario = colaboradores.id) INNER JOIN origens ON clientes.id_origem = origens.id"; return "clientes"; }
         static string get_fields(query_type select)
         {
@@ -138,6 +140,31 @@ namespace clientes
         };
     }
 
+    void from_json(const nlohmann::json& j, cliente& obj)
+    {
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+
+        j.at("nome").get_to(obj.nome);
+        j.at("email").get_to(obj.email);
+        j.at("proprietario").get_to(obj.proprietario.id);
+        j.at("cpf_cnpj").get_to(obj.cpf_cnpj);
+        j.at("telefone").get_to(obj.telefone);
+        j.at("cep").get_to(obj.cep);
+        j.at("endereco").get_to(obj.endereco);
+        j.at("numero").get_to(obj.numero);
+        j.at("complemento").get_to(obj.complemento);
+        j.at("origem").get_to(obj.cliente_origem.id);
+        j.at("data_origem").get_to(obj.data_origem);
+        j.at("extra_nome").get_to(obj.extra_nome);
+        j.at("extra_cpf").get_to(obj.extra_cpf);
+        j.at("extra_rg").get_to(obj.extra_rg);
+        j.at("extra_nacionalidade").get_to(obj.extra_nacionalidade);
+        j.at("extra_profissao").get_to(obj.extra_profissao);
+        j.at("extra_renda").get_to(obj.extra_renda);
+        j.at("observacoes").get_to(obj.observacoes);
+    }
+
     #pragma endregion JSON serialization
 
     #pragma region operations
@@ -171,30 +198,12 @@ namespace clientes
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 18 || !info[0].IsString() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString() || !info[5].IsString() || !info[6].IsString() || !info[7].IsNumber() || !info[8].IsString() || !info[9].IsNumber() || !info[10].IsString() ||  !info[11].IsString() || !info[12].IsString() || !info[13].IsString() || !info[14].IsString() || !info[15].IsString() || !info[16].IsNumber() || !info[17].IsString())
+        if (info.Length() < 1 || !info[0].IsString())
             Napi::TypeError::New(env, "nome::String, email::String, id_proprietario::Number, cpf_cnpj::String, telefone::String, cep::String, numero::Number, complemento::String, id_origem::Number, data_origem::String, extra_nome::String, extra_cpf::String, extra_rg::String, extra_nacionalidade::String, extra_profissao::String, extra_renda::Number, observacoes::String expected")
                 .ThrowAsJavaScriptException();
 
-        cliente _cliente(
-            remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[2].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[5].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[6].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[7].As<Napi::Number>().Int64Value(),
-            remove_single_quotes(info[8].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[9].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[10].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[11].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[12].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[13].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[14].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[15].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[16].As<Napi::Number>().DoubleValue(),
-            remove_single_quotes(info[17].As<Napi::String>().Utf8Value(), DUPLICATE)
-        ); 
+        cliente _cliente = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<cliente>();
 
         json errs = json::array({});
         if (!validate_letters(_cliente.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
@@ -224,31 +233,12 @@ namespace clientes
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 19 || !info[0].IsNumber()|| !info[1].IsString() || !info[2].IsString() || !info[3].IsNumber() || !info[4].IsString() || !info[5].IsString() || !info[6].IsString()|| !info[7].IsString() || !info[8].IsNumber() || !info[9].IsString() || !info[10].IsNumber() || !info[11].IsString() ||  !info[12].IsString() || !info[13].IsString() || !info[14].IsString() || !info[15].IsString() || !info[16].IsString() || !info[17].IsNumber() || !info[18].IsString())
+        if (info.Length() < 1 || !info[0].IsString())
             Napi::TypeError::New(env, "nome::String, email::String, id_proprietario::Number, cpf_cnpj::String, telefone::String, cep::String, endereco::String, numero::Number, complemento::String, id_origem::Number, data_origem::String, extra_nome::String, extra_cpf::String, extra_rg::String, extra_nacionalidade::String, extra_profissao::String, extra_renda::Number, observacoes::String expected")
                 .ThrowAsJavaScriptException();
 
-        cliente _cliente(
-            info[0].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[3].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[5].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[6].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[7].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[8].As<Napi::Number>().Int64Value(),
-            remove_single_quotes(info[9].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[10].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[11].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[12].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[13].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[14].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[15].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[16].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[17].As<Napi::Number>().DoubleValue(),
-            remove_single_quotes(info[18].As<Napi::String>().Utf8Value(), DUPLICATE)
-        ); 
+        cliente _cliente = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<cliente>();
 
         json errs = json::array({});
         if (!validate_letters(_cliente.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
@@ -292,7 +282,10 @@ namespace clientes
         json errs = json::array({});
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, cliente::get_table(DELETE), field<size_t>("id", id)))
+        {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+            return Napi::Boolean::New(env, false);
+        }
         crud::remove<cliente>(field<size_t>("id", id));
 
         return Napi::Boolean::New(env, true);

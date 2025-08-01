@@ -74,10 +74,22 @@ namespace colaboradores
 
     #pragma region JSON serialization
         
-    void to_json(nlohmann::json& j, colaborador& obj)
+    void to_json(nlohmann::json& j, const colaborador& obj)
     {
         j = {{ "id", obj.id }, { "nome", obj.nome }, { "id_cargo", obj.id_cargo },
         { "email", obj.email }, { "telefone", obj.telefone }, { "cpf_cnpj", obj.cpf_cnpj }};
+    }
+
+    void from_json(const nlohmann::json& j, colaborador& obj)
+    {
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+
+        j.at("nome").get_to(obj.nome);
+        j.at("id_cargo").get_to(obj.id_cargo);
+        j.at("email").get_to(obj.email);
+        j.at("telefone").get_to(obj.telefone);
+        j.at("cpf_cnpj").get_to(obj.cpf_cnpj);
     }
 
     #pragma endregion JSON serialization
@@ -110,17 +122,12 @@ namespace colaboradores
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 5 || !info[0].IsString() || !info[1].IsNumber() || !info[2].IsString() || !info[3].IsString() || !info[4].IsString())
+        if (info.Length() < 1 || !info[0].IsString())
             Napi::TypeError::New(env, "nome::String, id_cargo::Number, email::String, telefone::String, cpf_cnpj::String expected")
                 .ThrowAsJavaScriptException();
 
-        colaborador _colaborador(
-            remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[1].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[2].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE)
-        ); 
+        colaborador _colaborador = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<colaborador>();
 
         json errs = json::array({});
         if (!validate_letters(_colaborador.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
@@ -144,22 +151,17 @@ namespace colaboradores
     {
         Napi::Env env = info.Env();
 
-        if (info.Length() < 6 || !info[0].IsNumber() || !info[1].IsString() || !info[2].IsNumber() || !info[3].IsString() || !info[4].IsString() || !info[5].IsString())
+        if (info.Length() < 1 || !info[0].IsString())
             Napi::TypeError::New(env, "id::Number, nome::String, id_cargo::Number, email::String, telefone::String, cpf_cnpj::String expected")
                 .ThrowAsJavaScriptException();
-                
-        colaborador _colaborador(
-            info[0].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[1].As<Napi::String>().Utf8Value(), DUPLICATE),
-            info[2].As<Napi::Number>().Int32Value(),
-            remove_single_quotes(info[3].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[4].As<Napi::String>().Utf8Value(), DUPLICATE),
-            remove_single_quotes(info[5].As<Napi::String>().Utf8Value(), DUPLICATE)
-        ); 
+
+
+        colaborador _colaborador = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<colaborador>();
 
         json errs = json::array({});
         if (!validate_letters(_colaborador.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
-        if (_colaborador.id_cargo < 1 || _colaborador.id_cargo > 5) errs.push_back(field_error("cargo", field_error_code::INVALID_FIELD));
+        if (_colaborador.id_cargo < 0 || _colaborador.id_cargo > 4) errs.push_back(field_error("cargo", field_error_code::INVALID_FIELD));
         if (!validate_email(_colaborador.email)) errs.push_back(field_error("email", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_colaborador.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_colaborador.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_colaborador.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
@@ -167,7 +169,10 @@ namespace colaboradores
         validate_unique(errs, colaborador::get_table(VALIDATE), field<string>("cpf_cnpj", _colaborador.cpf_cnpj, fmt::format("id != {}", _colaborador.id).c_str()));
             
         if (errs.size() > 0)
+        {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+            return Napi::Boolean::New(env, false);
+        }
 
         crud::update<colaborador>(_colaborador.id, field<string>("nome", _colaborador.nome), field<size_t>("id_cargo",  (int)_colaborador.id_cargo),
             field<string>("email", _colaborador.email), field<string>("telefone", _colaborador.telefone),
@@ -187,7 +192,10 @@ namespace colaboradores
         json errs = json::array({});
         size_t id = info[0].As<Napi::Number>().Int32Value();
         if (validate_unique(errs, colaborador::get_table(VALIDATE), field<size_t>("id", id)))
+        {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
+            return Napi::Boolean::New(env, false);
+        }
         crud::remove<colaborador>(field<size_t>("id", id));
 
         return Napi::Boolean::New(env, true);

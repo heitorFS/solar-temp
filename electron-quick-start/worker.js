@@ -42,7 +42,7 @@ onmessage = (e) => {
 
             // region Cliente
             case 'createCliente':
-                createCliente(e.data[1]["nome"], e.data[1]["email"], e.data[1]["proprietario"], e.data[1]["cpf_cnpj"], e.data[1]["telefone"], e.data[1]["cep"], e.data[1]["endereco"], e.data[1]["numero"], e.data[1]["complemento"], e.data[1]["origem"], e.data[1]["data_origem"], e.data[1]["extra_nome"], e.data[1]["extra_cpf"], e.data[1]["extra_rg"], e.data[1]["extra_nacionalidade"], e.data[1]["extra_profissao"], e.data[1]["extra_renda"], e.data[1]["observacoes"]);
+                createCliente(JSON.stringify(e.data[1]));
                 postMessage(["Cliente criado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'getAllClientesShort':
@@ -58,7 +58,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"])
                 break;
             case 'updateCliente':
-                updateCliente(e.data[1]["id"], e.data[1]["nome"], e.data[1]["email"], e.data[1]["proprietario"], e.data[1]["cpf_cnpj"], e.data[1]["telefone"], e.data[1]["cep"], e.data[1]["endereco"], e.data[1]["numero"], e.data[1]["complemento"], e.data[1]["origem"], e.data[1]["data_origem"], e.data[1]["extra_nome"], e.data[1]["extra_cpf"], e.data[1]["extra_rg"], e.data[1]["extra_nacionalidade"], e.data[1]["extra_profissao"], e.data[1]["extra_renda"], e.data[1]["observacoes"]);
+                updateCliente(JSON.stringify(e.data[1]));
                 postMessage(["Cliente atualizado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'deleteCliente':
@@ -69,7 +69,7 @@ onmessage = (e) => {
 
             // region Colaborador
             case 'createColaborador':
-                createColaborador(e.data[1]["nome"], e.data[1]["id_cargo"], e.data[1]["email"], e.data[1]["telefone"], e.data[1]["cpf_cnpj"]);
+                createColaborador(JSON.stringify(e.data[1]));
                 postMessage(["Colaborador criado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'getAllColaboradores':
@@ -81,7 +81,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"]);
                 break;
             case 'updateColaborador':
-                updateColaborador(e.data[1]["id"], e.data[1]["nome"], e.data[1]["id_cargo"], e.data[1]["email"], e.data[1]["telefone"], e.data[1]["cpf_cnpj"]);
+                updateColaborador(JSON.stringify(e.data[1]));
                 postMessage(["Colaborador atualizado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'deleteColaborador':
@@ -92,7 +92,7 @@ onmessage = (e) => {
 
             // region Inversor
             case 'createInversor':
-                createInversor(e.data[1]["id_kit"], e.data[1]["marca"], e.data[1]["modelo"], e.data[1]["id_monitoramento"], e.data[1]["potencia"], e.data[1]["quantidade"], e.data[1]["garantia"], e.data[1]["microinversor"]);
+                createInversor(JSON.stringify(e.data[1]));
                 postMessage(["Inversor criado com sucesso", e.data[0], "void"]);
                 break;
             case 'getInversoresByKit':
@@ -108,7 +108,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"]);
                 break;
             case 'updateInversor':
-                updateInversor(e.data[1]["id"], e.data[1]["marca"], e.data[1]["modelo"], e.data[1]["id_monitoramento"], e.data[1]["potencia"], e.data[1]["quantidade"], e.data[1]["garantia"], e.data[1]["microinversor"]);
+                updateInversor(JSON.stringify(e.data[1]));
                 postMessage(["Inversor atualizado com sucesso", e.data[0], "void"]);
                 break;
             case 'deleteInversor':
@@ -123,7 +123,7 @@ onmessage = (e) => {
 
             // region Item
             case 'createItem':
-                createItem(e.data[1]["id_kit"], e.data[1]["nome"], e.data[1]["quantidade"], e.data[1]["fabricante"], e.data[1]["detalhe"]);
+                createItem(JSON.stringify(e.data[1]));
                 postMessage(["Item criado com sucesso", e.data[0], "void"]);
                 break;
             case 'getItensByKit':
@@ -139,7 +139,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"]);
                 break;
             case 'updateItem':
-                updateItem(e.data[1]["id"], e.data[1]["nome"], e.data[1]["quantidade"], e.data[1]["fabricante"], e.data[1]["detalhe"]);
+                updateItem(JSON.stringify(e.data[1]));
                 postMessage(["Item atualizado com sucesso", e.data[0], "void"]);
                 break;
             case 'deleteItem':
@@ -154,7 +154,7 @@ onmessage = (e) => {
 
             // region Companhia
             case 'createCompanhia':
-                createCompanhia(e.data[1]);
+                createCompanhia(JSON.stringify(e.data[1]));
                 postMessage(["Companhia criado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'getAllCompanhias':
@@ -166,7 +166,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"]);
                 break;
             case 'updateCompanhia':
-                updateCompanhia(e.data[1]["id"], e.data[1]["nome"]);
+                updateCompanhia(JSON.stringify(e.data[1]));
                 postMessage(["Companhia atualizado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'deleteCompanhia':
@@ -177,7 +177,7 @@ onmessage = (e) => {
 
             // region Kit
             case 'createKit':
-                var id = createKit(e.data[1]["fornecedor"], e.data[1]["valor"], e.data[1]["tensao"], e.data[1]["fixacao"], e.data[1]["observacoes"]);
+                var id = createKit(JSON.stringify(e.data[1]));
                 postMessage([id, e.data[0], "create_id"]);
                 break;
             case 'getAllKits':
@@ -189,7 +189,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"]);
                 break;
             case 'updateKit':
-                updateKit(e.data[1]["id"], e.data[1]["fornecedor"], e.data[1]["valor"], e.data[1]["tensao"], e.data[1]["fixacao"], e.data[1]["observacoes"]);
+                updateKit(JSON.stringify(e.data[1]));
                 postMessage(["Kit atualizado com sucesso", e.data[0], "form_success"]);
                 break;
             case 'deleteKit':
@@ -200,7 +200,7 @@ onmessage = (e) => {
 
             // region Modulo
             case 'createModulo':
-                createModulo(e.data[1]["id_kit"], e.data[1]["potencia"], e.data[1]["marca"], e.data[1]["quantidade"], e.data[1]["peso"], e.data[1]["comprimento"], e.data[1]["largura"], e.data[1]["garantia_defeito"], e.data[1]["garantia_eficiencia"]);
+                createModulo(JSON.stringify(e.data[1]));
                 postMessage(["Modulo criado com sucesso", e.data[0], "void"]);
                 break;
             case 'getModulosByKit':
@@ -216,7 +216,7 @@ onmessage = (e) => {
                 postMessage([ret, e.data[0], "json"]);
                 break;
             case 'updateModulo':
-                updateModulo(e.data[1]["id"], e.data[1]["potencia"], e.data[1]["marca"], e.data[1]["quantidade"], e.data[1]["peso"], e.data[1]["comprimento"], e.data[1]["largura"], e.data[1]["garantia_defeito"], e.data[1]["garantia_eficiencia"]);
+                updateModulo(JSON.stringify(e.data[1]));
                 postMessage(["Modulo atualizado com sucesso", e.data[0], "void"]);
                 break;
             case 'deleteModulo':
@@ -231,7 +231,7 @@ onmessage = (e) => {
 
             // region Origem
             case 'createOrigem':
-                createOrigem(e.data[1]["nome"], e.data[1]["id_companhia"]);
+                createOrigem(JSON.stringify(e.data[1]));
                 postMessage(["Origem criada com sucesso", e.data[0], "form_success"]);
                 break;
             case 'getAllOrigens':

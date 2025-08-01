@@ -82,7 +82,7 @@ string remove_single_quotes(string txt, bool duplicate)
     while (location != string::npos)
     {
         txt.replace(location, 1, duplicate ? "''" : "");
-        location = txt.find('\'', location + 1);
+        location = txt.find('\'', location + 1 + (int) duplicate);
     }
 
     return txt;

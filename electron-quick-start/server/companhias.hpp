@@ -49,6 +49,14 @@ namespace companhias
         j = {{ "id", obj.id }, { "nome", obj.nome }};
     }
 
+    void from_json(const nlohmann::json& j, companhia& obj)
+    {
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+
+        j.at("nome").get_to(obj.nome);
+    }
+
     #pragma endregion JSON serialization
 
     #pragma region operations
@@ -83,9 +91,8 @@ namespace companhias
             Napi::TypeError::New(env, "nome::String")
                 .ThrowAsJavaScriptException();
 
-        companhia _companhia(
-            remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE)
-        ); 
+        companhia _companhia = json::parse(remove_single_quotes(info[0].As<Napi::String>().Utf8Value(), DUPLICATE))
+            .template get<companhia>();
 
         json errs = json::array({});
         if (!validate_letters(_companhia.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
