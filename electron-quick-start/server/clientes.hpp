@@ -142,27 +142,25 @@ namespace clientes
 
     void from_json(const nlohmann::json& j, cliente& obj)
     {
-        if (j.contains("id"))
-            j.at("id").get_to(obj.id);
-
-        j.at("nome").get_to(obj.nome);
-        j.at("email").get_to(obj.email);
-        j.at("proprietario").get_to(obj.proprietario.id);
-        j.at("cpf_cnpj").get_to(obj.cpf_cnpj);
-        j.at("telefone").get_to(obj.telefone);
-        j.at("cep").get_to(obj.cep);
-        j.at("endereco").get_to(obj.endereco);
-        j.at("numero").get_to(obj.numero);
-        j.at("complemento").get_to(obj.complemento);
-        j.at("origem").get_to(obj.cliente_origem.id);
-        j.at("data_origem").get_to(obj.data_origem);
-        j.at("extra_nome").get_to(obj.extra_nome);
-        j.at("extra_cpf").get_to(obj.extra_cpf);
-        j.at("extra_rg").get_to(obj.extra_rg);
-        j.at("extra_nacionalidade").get_to(obj.extra_nacionalidade);
-        j.at("extra_profissao").get_to(obj.extra_profissao);
-        j.at("extra_renda").get_to(obj.extra_renda);
-        j.at("observacoes").get_to(obj.observacoes);
+        validate_from_json(j, "id", obj.id);
+        validate_from_json(j, "nome", obj.nome);
+        validate_from_json(j, "email", obj.email);
+        validate_from_json(j, "proprietario", obj.proprietario.id);
+        validate_from_json(j, "cpf_cnpj", obj.cpf_cnpj);
+        validate_from_json(j, "telefone", obj.telefone);
+        validate_from_json(j, "cep", obj.cep);
+        validate_from_json(j, "endereco", obj.endereco);
+        validate_from_json(j, "numero", obj.numero);
+        validate_from_json(j, "complemento", obj.complemento);
+        validate_from_json(j, "origem", obj.cliente_origem.id);
+        validate_from_json(j, "data_origem", obj.data_origem);
+        validate_from_json(j, "extra_nome", obj.extra_nome);
+        validate_from_json(j, "extra_cpf", obj.extra_cpf);
+        validate_from_json(j, "extra_rg", obj.extra_rg);
+        validate_from_json(j, "extra_nacionalidade", obj.extra_nacionalidade);
+        validate_from_json(j, "extra_profissao", obj.extra_profissao);
+        validate_from_json(j, "extra_renda", obj.extra_renda);
+        validate_from_json(j, "observacoes", obj.observacoes);
     }
 
     #pragma endregion JSON serialization

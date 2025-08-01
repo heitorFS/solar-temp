@@ -82,14 +82,12 @@ namespace colaboradores
 
     void from_json(const nlohmann::json& j, colaborador& obj)
     {
-        if (j.contains("id"))
-            j.at("id").get_to(obj.id);
-
-        j.at("nome").get_to(obj.nome);
-        j.at("id_cargo").get_to(obj.id_cargo);
-        j.at("email").get_to(obj.email);
-        j.at("telefone").get_to(obj.telefone);
-        j.at("cpf_cnpj").get_to(obj.cpf_cnpj);
+        validate_from_json(j, "id", obj.id);
+        validate_from_json(j, "nome", obj.nome);
+        validate_from_json(j, "id_cargo", obj.id_cargo);
+        validate_from_json(j, "email", obj.email);
+        validate_from_json(j, "telefone", obj.telefone);
+        validate_from_json(j, "cpf_cnpj", obj.cpf_cnpj);
     }
 
     #pragma endregion JSON serialization

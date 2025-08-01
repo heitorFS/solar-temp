@@ -40,6 +40,24 @@ void to_json(nlohmann::json& j, field_error& obj)
     j = {{ "name", obj.name }, { "error_type", obj.err }};
 }
 
+template <typename T>
+struct query_info
+{
+    int page;
+    int items_page;
+    string order_by;
+    T filter;
+};
+
+template <typename T>
+void from_json(const json& j, query_info<T>& obj)
+{
+    j.at("page").get_to(obj.page);
+    j.at("items_page").get_to(obj.items_page);
+    j.at("order_by").get_to(obj.order_by)
+    j.at("filter").get_to(obj.filter);
+}
+
 #pragma endregion Helper Classes
 
 #pragma region Helper Methods
@@ -86,6 +104,13 @@ string remove_single_quotes(string txt, bool duplicate)
     }
 
     return txt;
+}
+
+template <typename T>
+void validate_from_json(const nlohmann::json& j, char* name, T& prop)
+{
+    if (j.contains(name))
+        j.at(name).get_to(prop);
 }
 
 #pragma endregion Helper Methods

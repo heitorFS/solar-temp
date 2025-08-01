@@ -51,10 +51,8 @@ namespace companhias
 
     void from_json(const nlohmann::json& j, companhia& obj)
     {
-        if (j.contains("id"))
-            j.at("id").get_to(obj.id);
-
-        j.at("nome").get_to(obj.nome);
+        validate_from_json(j, "id", obj.id);
+        validate_from_json(j, "nome", obj.nome);
     }
 
     #pragma endregion JSON serialization

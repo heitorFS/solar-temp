@@ -70,11 +70,9 @@ namespace origens
 
     void from_json(const nlohmann::json& j, origem& obj)
     {
-        if (j.contains("id"))
-            j.at("id").get_to(obj.id);
-
-        j.at("nome").get_to(obj.nome);
-        j.at("id_companhia").get_to(obj.origem_companhia.id);
+        validate_from_json(j, "id", obj.id);
+        validate_from_json(j, "nome", obj.nome);
+        validate_from_json(j, "id_companhia", obj.origem_companhia.id);
     }
 
     #pragma endregion JSON serialization

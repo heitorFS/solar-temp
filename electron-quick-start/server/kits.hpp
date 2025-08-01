@@ -205,14 +205,12 @@ namespace kits
 
     void from_json(const nlohmann::json& j, kit& obj)
     {
-        if (j.contains("id"))
-            j.at("id").get_to(obj.id);
-            
-        j.at("fornecedor").get_to(obj.fornecedor);
-        j.at("valor").get_to(obj.valor);
-        j.at("tensao").get_to(obj.id_tensao);
-        j.at("fixacao").get_to(obj.id_fixacao);
-        j.at("observacoes").get_to(obj.observacoes);
+        validate_from_json(j, "id", obj.id);            
+        validate_from_json(j, "fornecedor", obj.fornecedor);
+        validate_from_json(j, "valor", obj.valor);
+        validate_from_json(j, "tensao", obj.id_tensao);
+        validate_from_json(j, "fixacao", obj.id_fixacao);
+        validate_from_json(j, "observacoes", obj.observacoes);
     }
 
     #pragma endregion kit JSON serialization
@@ -368,18 +366,16 @@ namespace kits
 
         void from_json(const nlohmann::json& j, modulo& obj)
         {
-            if (j.contains("id"))
-                j.at("id").get_to(obj.id);
-            
-            j.at("id_kit").get_to(obj.id_kit);
-            j.at("potencia").get_to(obj.potencia);
-            j.at("marca").get_to(obj.marca);
-            j.at("quantidade").get_to(obj.quantidade);
-            j.at("peso").get_to(obj.peso);
-            j.at("comprimento").get_to(obj.comprimento);
-            j.at("largura").get_to(obj.largura);
-            j.at("garantia_defeito").get_to(obj.garantia_defeito);
-            j.at("garantia_eficiencia").get_to(obj.garantia_eficiencia);
+            validate_from_json(j, "id", obj.id);
+            validate_from_json(j, "id_kit", obj.id_kit);
+            validate_from_json(j, "potencia", obj.potencia);
+            validate_from_json(j, "marca", obj.marca);
+            validate_from_json(j, "quantidade", obj.quantidade);
+            validate_from_json(j, "peso", obj.peso);
+            validate_from_json(j, "comprimento", obj.comprimento);
+            validate_from_json(j, "largura", obj.largura);
+            validate_from_json(j, "garantia_defeito", obj.garantia_defeito);
+            validate_from_json(j, "garantia_eficiencia", obj.garantia_eficiencia);
         }
 
         #pragma endregion modulo JSON serialization
@@ -564,17 +560,15 @@ namespace kits
 
         void from_json(const nlohmann::json& j, inversor& obj)
         {
-            if (j.contains("id"))
-                j.at("id").get_to(obj.id);
-                
-            j.at("id_kit").get_to(obj.id_kit);
-            j.at("marca").get_to(obj.marca);
-            j.at("modelo").get_to(obj.modelo);
-            j.at("monitoramento").get_to(obj.id_monitoramento);
-            j.at("potencia").get_to(obj.potencia);
-            j.at("quantidade").get_to(obj.quantidade);
-            j.at("garantia").get_to(obj.garantia);
-            j.at("microinversor").get_to(obj.microinversor);
+            validate_from_json(j, "id", obj.id);
+            validate_from_json(j, "id_kit", obj.id_kit);
+            validate_from_json(j, "marca", obj.marca);
+            validate_from_json(j, "modelo", obj.modelo);
+            validate_from_json(j, "monitoramento", obj.id_monitoramento);
+            validate_from_json(j, "potencia", obj.potencia);
+            validate_from_json(j, "quantidade", obj.quantidade);
+            validate_from_json(j, "garantia", obj.garantia);
+            validate_from_json(j, "microinversor", obj.microinversor);
         }
 
         #pragma endregion inversor JSON serialization
@@ -744,14 +738,12 @@ namespace kits
 
         void from_json(const nlohmann::json& j, item& obj)
         {
-            if (j.contains("id"))
-                j.at("id").get_to(obj.id);
-                
-            j.at("id_kit").get_to(obj.id_kit);
-            j.at("nome").get_to(obj.nome);
-            j.at("quantidade").get_to(obj.quantidade);
-            j.at("fabricante").get_to(obj.fabricante);
-            j.at("detalhes").get_to(obj.detalhes);
+            validate_from_json(j, "id", obj.id);
+            validate_from_json(j, "id_kit", obj.id_kit);
+            validate_from_json(j, "nome", obj.nome);
+            validate_from_json(j, "quantidade", obj.quantidade);
+            validate_from_json(j, "fabricante", obj.fabricante);
+            validate_from_json(j, "detalhes", obj.detalhes);
         }
 
         #pragma endregion item JSON serialization
