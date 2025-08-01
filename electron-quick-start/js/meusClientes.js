@@ -73,7 +73,7 @@ deleteRow = (id) => {
 }
 
 openView = (e, id) => {
-    if (e.target.localName === 'path' && e.target.localName === 'svg' && e.target.classList[0] === 'table-action')
+    if (e.target.localName === 'path' || e.target.localName === 'svg' || e.target.classList[0] === 'table-action')
         return;
 
     getRow = (data) => {
