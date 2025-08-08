@@ -1,9 +1,13 @@
 #ifndef INCLUDE_CRUD_
 #define INCLUDE_CRUD_
 
+#define COMMA false
+#define AND true
+
 #include <sqlite3.h>
 
 #include <string>
+#include <tuple>
 
 using namespace std;
 
@@ -12,12 +16,8 @@ struct field
 {
     string name;
     T value;
-    const char* extra = NULL;
 
     field(string _name, T _value) : name(_name), value(_value) 
-    {}
-
-    field(string _name, T _value, const char* _extra) : name(_name), value(_value), extra(_extra)
     {}
 };
 
@@ -27,9 +27,35 @@ enum query_type
     UPDATE = 0,
     DELETE = 0,
     VALIDATE = 0,
-    SELECT_FULL = 1,
+    SELECT_FULL,
     SELECT_SHORT
 };
+
+struct query_info
+{
+    int page;
+    int items_page;
+    string order_by;
+    query_type type;
+    json filter;
+};
+
+template <typename T>
+void from_json(const json& j, query_info& obj)
+{
+    j.at("page").get_to(obj.page);
+    j.at("items_page").get_to(obj.items_page);
+    j.at("order_by").get_to(obj.order_by)
+    j.at("filter").get_to(obj.filter);
+}
+
+string get_filter(json& j_filter)
+{
+    for (auto it = j_filter.begin(); it != j_filter.end(); ++it)
+    {
+        cout << "";
+    }
+}
 
 template <int N, typename ...T>
 decltype(auto) get_argument(const T&... t)
@@ -37,16 +63,26 @@ decltype(auto) get_argument(const T&... t)
     return get<N>(forward_as_tuple(t...));
 }
 
-void formatQuery(string& base, string& query, string& table)
+template<typename T>
+void format_helper(string& base, string& query, bool separator_and, bool& first, field<T> arg)
 {
-    base.erase(base.length() - 1);
+    if (!first)
+{
+        base += separator_and ? " AND" : ",";
+    }
+    else     
+        first = false;
+
+    base += fmt::format(query, arg.name, arg.value);
 }
 
-template <typename T, typename... Args>
-void formatQuery(string& base, string& query, string& table, T& arg, Args&... args)
+template <typename... T>
+void format_query(string& base, string& query, string& table, bool separator_and, tuple<T...> t)
 {
-    base += fmt::format(typeid(arg.value) == typeid(string) ? query : remove_single_quotes(query, REMOVE), arg.name, arg.value, arg.extra != NULL ? fmt::format(" AND {}", arg.extra) : "");
-    formatQuery(base, query, table, args...);
+    bool first = true;
+    std::apply([&base, &query, separator_and, &first](auto&&... args) {
+        (format_helper(base, query, separator_and, first, args), ...);
+    }, t);
 }
 
 static int close_connection(void* _db, int count, char** data, char** columns)

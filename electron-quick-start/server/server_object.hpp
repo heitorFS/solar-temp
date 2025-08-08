@@ -40,37 +40,23 @@ void to_json(nlohmann::json& j, field_error& obj)
     j = {{ "name", obj.name }, { "error_type", obj.err }};
 }
 
-template <typename T>
-struct query_info
-{
-    int page;
-    int items_page;
-    string order_by;
-    T filter;
-};
-
-template <typename T>
-void from_json(const json& j, query_info<T>& obj)
-{
-    j.at("page").get_to(obj.page);
-    j.at("items_page").get_to(obj.items_page);
-    j.at("order_by").get_to(obj.order_by)
-    j.at("filter").get_to(obj.filter);
-}
-
 #pragma endregion Helper Classes
 
 #pragma region Helper Methods
 
 template <typename... Args>
-bool validate_unique(json& ret, string table, Args... args)
+bool validate_unique(json& ret, string table, size_t id, Args... args)
 {
     sqlite3* db;
     int err = sqlite3_open("C:/AEnAzume/database.db", &db);
 
     sqlite3_stmt* stmt;
-    string sql = "SELECT", query = " COUNT(CASE WHEN {} = '{}'{} THEN 1 ELSE null END),";
-    formatQuery(sql, query, table, forward<Args>(args)...);
+    string sql = "SELECT";
+    string query = id != NULL ?
+        "COUNT(CASE WHEN {} = '{}' WHERE id != " + to_string(id) + " THEN 1 ELSE null END)," :
+        "COUNT(CASE WHEN {} = '{}' THEN 1 ELSE null END),";
+
+    format_query(sql, query, false, make_tuple(args...));
     sql += fmt::format(" FROM {}", table);
 
     err = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
