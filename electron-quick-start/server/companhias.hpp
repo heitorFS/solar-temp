@@ -51,8 +51,9 @@ namespace companhias
 
     void from_json(const nlohmann::json& j, companhia& obj)
     {
-        validate_from_json(j, "id", obj.id);
-        validate_from_json(j, "nome", obj.nome);
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+        j.at("nome").get_to(obj.nome);
     }
 
     #pragma endregion JSON serialization
@@ -95,7 +96,7 @@ namespace companhias
         json errs = json::array({});
         if (!validate_letters(_companhia.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
         
-        validate_unique(errs, companhia::get_table(VALIDATE), field<string>("nome", _companhia.nome));
+        validate_unique(errs, companhia::get_table(VALIDATE), _companhia.id, field<string>("nome", _companhia.nome));
 
         if (errs.size() > 0)
         {
@@ -122,7 +123,7 @@ namespace companhias
         json errs = json::array({});
         if (!validate_letters(_companhia.nome)) errs.push_back(field_error("nome", field_error_code::INVALID_FIELD));
         
-        validate_unique(errs, companhia::get_table(VALIDATE), field<string>("nome", _companhia.nome));
+        validate_unique(errs, companhia::get_table(VALIDATE), _companhia.id, field<string>("nome", _companhia.nome));
 
         if (errs.size() > 0)
         {
@@ -145,7 +146,7 @@ namespace companhias
 
         json errs = json::array({});
         size_t id = info[0].As<Napi::Number>().Int32Value();
-        if (validate_unique(errs, companhia::get_table(VALIDATE), field<size_t>("id", id)))
+        if (validate_unique(errs, companhia::get_table(VALIDATE), 0, field<size_t>("id", id)))
         {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();        
             return Napi::Boolean::New(env, false);

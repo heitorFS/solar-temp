@@ -51,9 +51,9 @@ void from_json(const json& j, query_info& obj)
 
 string get_filter(json& j_filter)
 {
-    for (auto it = j_filter.begin(); it != j_filter.end(); ++it)
+    for (auto& [key, val] : j_filter.items())
     {
-        cout << "";
+        
     }
 }
 
@@ -67,7 +67,7 @@ template<typename T>
 void format_helper(string& base, string& query, bool separator_and, bool& first, field<T> arg)
 {
     if (!first)
-{
+    {
         base += separator_and ? " AND" : ",";
     }
     else     
@@ -78,7 +78,7 @@ void format_helper(string& base, string& query, bool separator_and, bool& first,
 
 template <typename... T>
 void format_query(string& base, string& query, string& table, bool separator_and, tuple<T...> t)
-{
+{    
     bool first = true;
     std::apply([&base, &query, separator_and, &first](auto&&... args) {
         (format_helper(base, query, separator_and, first, args), ...);
@@ -112,20 +112,35 @@ namespace crud
     }
 
     template <typename T>
-    string read(string* extra = NULL, query_type type = SELECT_FULL)
+    string read(query_info* options = NULL)
     {
         sqlite3* db;
         sqlite3_open("C:/AEnAzume/database.db", &db);
 
         auto q_array = json::array();
         sqlite3_stmt* stmt;
-        string sql = 
-            fmt::format("SELECT {} FROM {} {}", T::get_fields(type), T::get_table(type), extra != NULL ? *extra : "");
+        string sql;
+
+        if (options != NULL)
+            sql = fmt::format(
+                "SELECT * FROM ("
+                "   SELECT ROW_NUMBER() OVER (ORDER BY {}) AS RowNum, {}"
+                "   FROM {}"
+                "   {}"
+                ") AS result"
+                "WHERE RowNum >= {}"
+                "   AND RowNum <= {}"
+                "ORDER BY RowNum",
+                options->order_by, T::get_fields(options->type), T::get_table(options->type),
+                get_filter(options->filter),
+                1 + ((options->page - 1) * options->items_page), options->items_page * options->page);
+        else
+            sql = fmt::format("SELECT {} FROM {}", T::get_fields(query_type::SELECT_FULL), T::get_table(query_type::SELECT_FULL));
 
         int step = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
         while ((step = sqlite3_step(stmt)) == SQLITE_ROW)
         {
-            q_array.push_back(T(type, stmt));
+            q_array.push_back(T(options->type, stmt));
         }
 
         sqlite3_finalize(stmt);
@@ -141,7 +156,7 @@ namespace crud
         sqlite3_open("C:/AEnAzume/database.db", &db);
 
         string sql = fmt::format("UPDATE {} SET", T::get_table(UPDATE)), query = " {} = '{}',";
-        formatQuery(sql, query, T::get_table(UPDATE), forward<Args>(args)...);
+        formatQuery(sql, query, T::get_table(UPDATE), COMMA, forward<Args>(args)...);
         sql += fmt::format(" WHERE id = {}", id);
 
         sqlite3_exec(db, sql.c_str(), close_connection, db, NULL);

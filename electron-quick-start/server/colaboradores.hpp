@@ -82,12 +82,14 @@ namespace colaboradores
 
     void from_json(const nlohmann::json& j, colaborador& obj)
     {
-        validate_from_json(j, "id", obj.id);
-        validate_from_json(j, "nome", obj.nome);
-        validate_from_json(j, "id_cargo", obj.id_cargo);
-        validate_from_json(j, "email", obj.email);
-        validate_from_json(j, "telefone", obj.telefone);
-        validate_from_json(j, "cpf_cnpj", obj.cpf_cnpj);
+        if (j.contains("id"))
+            j.at("id").get_to(obj.id);
+            
+        j.at("nome").get_to(obj.nome);
+        j.at("id_cargo").get_to(obj.id_cargo);
+        j.at("email").get_to(obj.email);
+        j.at("telefone").get_to(obj.telefone);
+        j.at("cpf_cnpj").get_to(obj.cpf_cnpj);
     }
 
     #pragma endregion JSON serialization
@@ -164,7 +166,7 @@ namespace colaboradores
         if (!validate_numbers(_colaborador.telefone)) errs.push_back(field_error("telefone", field_error_code::INVALID_FIELD));
         if (!validate_numbers(_colaborador.cpf_cnpj) || !cpfcnpj_validacao::validate_cpfcnpj(_colaborador.cpf_cnpj.c_str())) errs.push_back(field_error("cpf_cnpj", field_error_code::INVALID_FIELD));
 
-        validate_unique(errs, colaborador::get_table(VALIDATE), field<string>("cpf_cnpj", _colaborador.cpf_cnpj, fmt::format("id != {}", _colaborador.id).c_str()));
+        validate_unique(errs, colaborador::get_table(VALIDATE), _colaborador.id, field<string>("cpf_cnpj", _colaborador.cpf_cnpj));
             
         if (errs.size() > 0)
         {
@@ -189,7 +191,7 @@ namespace colaboradores
 
         json errs = json::array({});
         size_t id = info[0].As<Napi::Number>().Int32Value();
-        if (validate_unique(errs, colaborador::get_table(VALIDATE), field<size_t>("id", id)))
+        if (validate_unique(errs, colaborador::get_table(VALIDATE), 0, field<size_t>("id", id)))
         {
             Napi::Error::New(env, to_string(errs)).ThrowAsJavaScriptException();
             return Napi::Boolean::New(env, false);
